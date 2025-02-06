@@ -1,14 +1,23 @@
 'use client';
 
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import Link from 'next/link';
 import {Container, Nav, Navbar} from 'components/bootstrap';
-
 import AuthButton from 'components/common/AuthButton';
 
+const isTabsShow = process.env.NEXT_PUBLIC_SHOW_ALL_NAVBAR_TABS === 'true';
+
 const NavBar: FC = () => {
+  const [expanded, setExpanded] = useState(false);
+
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" fixed="top" className="border-bottom border-dark-subtle">
+    <Navbar
+      bg="dark"
+      variant="dark"
+      expand="lg"
+      fixed="top"
+      expanded={expanded}
+      className="border-bottom border-dark-subtle">
       <Container>
         <Navbar.Brand as={Link} href="/" className="d-flex align-items-center">
           <svg
@@ -24,16 +33,39 @@ const NavBar: FC = () => {
           TeamFusion
         </Navbar.Brand>
 
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(!expanded)} />
 
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link as={Link} href="/">
-              Home
+            <Nav.Link as={Link} href="/" onClick={() => setExpanded(false)}>
+              Dashboard
             </Nav.Link>
-            <Nav.Link as={Link} href="/finance">
+            <Nav.Link as={Link} href="/finance" onClick={() => setExpanded(false)}>
               Finance
             </Nav.Link>
+            <Nav.Link as={Link} href="/ai_assistant" onClick={() => setExpanded(false)}>
+              AI Assistant
+            </Nav.Link>
+
+            {isTabsShow && (
+              <>
+                <Nav.Link as={Link} href="/documents" onClick={() => setExpanded(false)}>
+                  Documents
+                </Nav.Link>
+                <Nav.Link as={Link} href="/team" onClick={() => setExpanded(false)}>
+                  Team
+                </Nav.Link>
+                <Nav.Link as={Link} href="/tasks" onClick={() => setExpanded(false)}>
+                  Tasks
+                </Nav.Link>
+                <Nav.Link as={Link} href="/communication" onClick={() => setExpanded(false)}>
+                  Communication
+                </Nav.Link>
+                <Nav.Link as={Link} href="/settings" onClick={() => setExpanded(false)}>
+                  Settings
+                </Nav.Link>
+              </>
+            )}
           </Nav>
 
           <AuthButton />
