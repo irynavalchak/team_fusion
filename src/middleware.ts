@@ -1,5 +1,6 @@
 import {NextRequest, NextResponse} from 'next/server';
 import {withAuth} from 'next-auth/middleware';
+import {NextRequestWithAuth} from 'next-auth/middleware';
 
 const API_BASE_URL = process.env.API_BASE_URL || '';
 
@@ -39,26 +40,25 @@ function corsMiddleware(request: NextRequest) {
 }
 
 // Export the main middleware function enhanced with auth
-export default withAuth(
-  // Function that is called by the middleware
-  function middleware(request: NextRequest) {
-    const pathname = request.nextUrl.pathname;
+export default function middleware(request: NextRequestWithAuth) {
+  const pathname = request.nextUrl.pathname;
 
-    // Handle API routes with CORS
-    if (pathname.startsWith('/api/')) {
-      return corsMiddleware(request);
-    }
-
-    // For protected routes, withAuth will handle the authentication
-    // For all other routes, continue without modification
-    return NextResponse.next();
-  },
-  {
-    callbacks: {
-      authorized: ({token}) => !!token
-    }
+  // Excluding `/api/ai_assistant` from authorization checking
+  if (pathname.startsWith('/api/ai_assistant')) {
+    return corsMiddleware(request);
   }
-);
+
+  // For protected routes, withAuth will handle the authentication
+  // For all other routes, continue without modification
+  return withAuth(request, {
+    callbacks: {
+      authorized: ({token}) => {
+        const isAuthorized = !!token;
+        return isAuthorized;
+      }
+    }
+  });
+}
 
 // Configure protected routes and API routes
 export const config = {
