@@ -1,6 +1,8 @@
+import axios from 'axios';
+
 import {CHAT_GPT_MODEL} from 'config';
 
-const OPENAI_API_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const MODEL = process.env.OPENAI_MODEL || CHAT_GPT_MODEL;
 
 export const fetchOpenAIResponse = async (messages: {sender: string; text: string}[], context: string) => {
@@ -8,25 +10,30 @@ export const fetchOpenAIResponse = async (messages: {sender: string; text: strin
     throw new Error('API key is missing. Please set OPENAI_API_KEY in your environment variables.');
   }
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${OPENAI_API_KEY}`
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      messages: [
-        {role: 'system', content: `You are an AI assistant. Use the following context: ${context}`},
-        ...messages.map(msg => ({role: msg.sender === 'User' ? 'user' : 'assistant', content: msg.text}))
-      ]
-    })
-  });
+  try {
+    const response = await axios.post(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        model: MODEL,
+        messages: [
+          {role: 'system', content: `You are an AI assistant. Use the following context: ${context}`},
+          ...messages.map(msg => ({role: msg.sender === 'User' ? 'user' : 'assistant', content: msg.text}))
+        ]
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${OPENAI_API_KEY}`
+        }
+      }
+    );
 
-  if (!response.ok) {
-    throw new Error(`OpenAI API error: ${response.status}`);
+    return response.data.choices[0].message.content;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(`OpenAI API error: ${error.response?.status || 'Unknown error'}`);
+    } else {
+      throw new Error(`Unexpected error: ${String(error)}`);
+    }
   }
-
-  const data = await response.json();
-  return data.choices[0].message.content;
 };

@@ -1,7 +1,9 @@
 'use client';
 
 import React, {FC, useState, useRef, useEffect} from 'react';
-import {Container, Form, Button, Card} from 'react-bootstrap';
+import axios from 'axios';
+
+import {Container, Form, Button, Card} from 'components/bootstrap';
 
 import MDReader from 'helpers/mdHelper';
 
@@ -54,18 +56,18 @@ const AIAssistantPage: FC = () => {
     }
 
     try {
-      const response = await fetch('/api/ai_assistant', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({messages: newMessages, context})
-      });
+      const response = await axios.post(
+        '/api/ai_assistant',
+        {
+          messages: newMessages,
+          context
+        },
+        {
+          headers: {'Content-Type': 'application/json'}
+        }
+      );
 
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setMessages(prev => [...prev, {sender: 'AI', text: data.text}]);
+      setMessages(prev => [...prev, {sender: 'AI', text: response.data.text}]);
     } catch (error) {
       console.error('Error getting AI response:', error);
       setMessages(prev => [...prev, {sender: 'AI', text: 'Error processing your request. Try again later.'}]);

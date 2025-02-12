@@ -8,8 +8,7 @@ const nextConfig = {
         port: ''
       }
     ]
-  },
-  reactStrictMode: false
+  }
 };
 
 export default nextConfig;
