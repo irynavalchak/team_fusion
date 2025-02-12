@@ -45,7 +45,7 @@ export const getAccounts = async () => {
   try {
     const response = await axios.get('/api/account');
 
-    const accounts: TransactionCategory[] = response?.data?.accounts?.map((account: TransactionCategoryModel) => ({
+    const accounts: Account[] = response?.data?.accounts?.map((account: AccountModel) => ({
       id: account.id,
       organizationId: account.organization_id,
       name: account.name,
@@ -70,17 +70,15 @@ export const getOrganizations = async () => {
   try {
     const response = await axios.get('/api/organization');
 
-    const organizations: TransactionCategory[] = response?.data?.organizations?.map(
-      (organization: TransactionCategoryModel) => ({
-        id: organization.id,
-        name: organization.name,
-        country: organization.country,
-        currency: organization.currency,
-        taxId: organization.tax_id,
-        createdAt: organization.created_at,
-        updatedAt: organization.updated_at
-      })
-    );
+    const organizations: Organization[] = response?.data?.organizations?.map((organization: OrganizationModel) => ({
+      id: organization.id,
+      name: organization.name,
+      country: organization.country,
+      currency: organization.currency,
+      taxId: organization.tax_id,
+      createdAt: organization.created_at,
+      updatedAt: organization.updated_at
+    }));
 
     return organizations;
   } catch (error) {

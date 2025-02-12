@@ -1,4 +1,4 @@
-interface TransactionCategoryModel {
+interface OrganizationModel {
   id: number;
   name: string;
   country: string;

@@ -1,4 +1,4 @@
-interface TransactionCategoryModel {
+interface AccountModel {
   id: number;
   organization_id: number;
   name: string;

@@ -6,8 +6,8 @@ import TRANSACTION_TYPE from 'constants/transactionType';
 export interface FinancialState {
   activeOrganization: string;
   activeMonth: Date;
-  organizations: TransactionCategory[];
-  accounts: TransactionCategory[];
+  organizations: Organization[];
+  accounts: Account[];
   transactionCategories: TransactionCategory[];
   transactions: Transaction[];
 }
@@ -25,10 +25,10 @@ export const financialSlice = createSlice({
   name: 'financial',
   initialState,
   reducers: {
-    setOrganizations: (state, action: PayloadAction<TransactionCategory[]>) => {
+    setOrganizations: (state, action: PayloadAction<Organization[]>) => {
       state.organizations = action.payload;
     },
-    setAccounts: (state, action: PayloadAction<TransactionCategory[]>) => {
+    setAccounts: (state, action: PayloadAction<Account[]>) => {
       state.accounts = action.payload;
     },
     setTransactionCategories: (state, action: PayloadAction<TransactionCategory[]>) => {

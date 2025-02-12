@@ -1,4 +1,4 @@
-interface TransactionCategory {
+interface Organization {
   id: number;
   name: string;
   country: string;
