@@ -12,12 +12,24 @@ import {Textarea} from 'components/ui/textarea';
 
 import styles from './FileManager.module.css';
 
+interface Structure {
+  [key: string]: string[] | undefined;
+}
+
+type FolderStructure = {
+  [key: string]: FolderStructure | string[] | null;
+};
+
 interface FileManagerProps {
-  initialStructure: Record<string, string[]>;
+  initialStructure: FolderStructure;
 }
 
 export default function FileManager({initialStructure}: FileManagerProps) {
-  const [structure, setStructure] = useState(initialStructure);
+  const formattedStructure = Object.fromEntries(
+    Object.entries(initialStructure).map(([key, value]) => [key, Array.isArray(value) ? value : undefined])
+  );
+
+  const [structure, setStructure] = useState<Structure>(formattedStructure);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState<string>('');
   const [isEditing, setIsEditing] = useState(false);
@@ -118,7 +130,7 @@ export default function FileManager({initialStructure}: FileManagerProps) {
                   {folder === '/' ? 'Root' : folder}
                 </AccordionTrigger>
                 <AccordionContent>
-                  {files.map(file => (
+                  {(files as string[])?.map((file: string) => (
                     <div key={file} className={styles.fileItem} onClick={() => handleFileSelect(folder, file)}>
                       <File className="h-4 w-4 mr-2" />
                       <span>{file}</span>
