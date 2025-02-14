@@ -46,6 +46,9 @@ const NavBar: FC = () => {
             <Nav.Link as={Link} href="/ai_assistant" onClick={() => setExpanded(false)}>
               AI Assistant
             </Nav.Link>
+            <Nav.Link as={Link} href="/land" onClick={() => setExpanded(false)}>
+              Land
+            </Nav.Link>
 
             {isTabsShow && (
               <>

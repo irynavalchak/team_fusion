@@ -1,0 +1,143 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  padding: 20px;
+  gap: 20px;
+  background: #f0f2f5;
+}
+
+.leftPanel {
+  flex: 1;
+  border: 2px solid #0051a2;
+  border-radius: 8px;
+  padding: 20px;
+  min-width: 0;
+  background: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rightPanel {
+  height: fit-content;
+  border: 2px solid #d32f2f;
+  border-radius: 8px;
+  padding: 20px;
+  width: 300px;
+  background: #fdf3f3;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  word-break: break-word;
+  color: #333;
+}
+
+.section {
+  border: 10px solid #444;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  background: #ffffff;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  cursor: pointer;
+  background: #e3f2fd;
+  font-weight: 500;
+  border-bottom: 5px solid #444;
+}
+
+.sectionContent {
+  padding: 18px;
+  overflow-wrap: break-word;
+  background: #ffffff;
+}
+
+.fileTree {
+  list-style: none;
+  padding: 0;
+}
+
+.fileItem {
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #999;
+}
+
+.fileItem span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #222;
+}
+
+.fileItem:hover {
+  background: #e3f2fd;
+}
+
+.editor {
+  width: 100%;
+  min-height: 300px;
+  padding: 14px;
+  border: 2px solid #0051a2;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-family: monospace;
+  resize: vertical;
+  background: #ffffff;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 4rem;
+}
+
+.button {
+  padding: 10px 18px;
+  background: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.button:hover {
+  background: #0051a2;
+}
+
+.button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column-reverse;
+    padding: 10px;
+  }
+
+  .rightPanel {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .leftPanel {
+    width: 100%;
+  }
+}

@@ -48,6 +48,16 @@ export default function middleware(request: NextRequestWithAuth) {
     return corsMiddleware(request);
   }
 
+  // Excluding `/api/files_manager` from authorization checking
+  if (pathname.startsWith('/api/files_manager')) {
+    return corsMiddleware(request);
+  }
+
+  // Excluding `/api/land_manager` from authorization checking
+  if (pathname.startsWith('/api/land_manager')) {
+    return corsMiddleware(request);
+  }
+
   // For protected routes, withAuth will handle the authentication
   // For all other routes, continue without modification
   return withAuth(request, {
