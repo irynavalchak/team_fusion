@@ -1,29 +1,34 @@
-Ссылка на участок в GOOGLE: https://goo.gl/maps/Mfeuhkb4wVErkaNs5
+Link to the plot in Google Map: https://goo.gl/maps/Mfeuhkb4wVErkaNs5
 
-# 📍 Прекрасный участок земли – идеален для бизнеса: гостевых домов, хомстея или кемпинга
+# 📍 Beautiful Land Plot – Ideal for Business: Guesthouses, Homestay, or Camping
 
-- **Площадь:** ---  
-- **Расположение:** QGX8+R4F Rommani, Kapong District, Пхангнга, Тайланд  
+- **Area:** ---
+- **Location:** QGX8+R4F Rommani, Kapong District, Phang Nga, Thailand
 
-## 🏞️ Описание:
-- Ровный участок   
-- Граничит с чистым ручьем, который течет круглый год  
-- Внутри участка много пальм   
+## 🏞️ Description:
 
-## 📄 Документы:
-- ---  
+- Flat land
+- Borders a clean stream that flows year-round
+- Many palm trees on the plot
 
-## 💰 Цена:
-- **---** за весь участок  
+## 📄 Documents:
 
-## 📱 Контакт:
-- **---**  
+---
 
-## 💬 Оценка:
-✅ Живописное место с рекой – плюс для экопроекта  
-✅ Ровный участок – легко застраивать  
-✅ Недалеко от популярных мест – перспективно для бизнеса  
+## 💰 Price:
+
+- **---** for the entire plot
+
+## 📱 Contact:
+
+- **---**
+
+## 💬 Evaluation:
+
+✅ Scenic location with a river – a plus for an eco-project  
+✅ Flat land – easy to build on  
+✅ Close to popular places – promising for business  
 ❌ **---**  
-💰 **---**  
+💰 **---**
 
-### 🎯 Хороший вариант для эко-отеля или кемпинга!  
+### 🎯 A great option for an eco-hotel or camping!
