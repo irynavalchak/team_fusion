@@ -2,16 +2,11 @@
 
 import {useState, useEffect} from 'react';
 import axios from 'axios';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import {Folder} from 'lucide-react';
 
-import {Button} from 'components/ui/button';
-import {ScrollArea} from 'components/ui/scroll-area';
-import {Textarea} from 'components/ui/textarea';
+import ManagerWrapper from 'components/manager_wrapper/ManagerWrapper';
 
 import styles from './LandManager.module.css';
-import ImageCarousel from '../image_carousel/ImageCarousel';
 
 type FolderStructure = {
   [key: string]: FolderStructure | string[] | null;
@@ -36,7 +31,7 @@ export default function LandManager({initialStructure}: LandManagerProps) {
 
   const fetchFolderContent = async (folderPath: string) => {
     try {
-      const response = await axios.get('/api/land_manager/folder_content', {
+      const response = await axios.get('/api/land_manager', {
         params: {path: folderPath}
       });
 
@@ -58,9 +53,10 @@ export default function LandManager({initialStructure}: LandManagerProps) {
     if (!selectedFolder) return;
 
     try {
-      const response = await axios.post('/api/land_manager/save_md', {
+      const response = await axios.post('/api/save_file_md', {
         path: `${selectedFolder}/content.md`,
-        content: fileContent
+        content: fileContent,
+        folder: 'land'
       });
 
       if (response.status === 200) {
@@ -101,63 +97,20 @@ export default function LandManager({initialStructure}: LandManagerProps) {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.leftPanel}>
-        {!selectedFolder && selectedFolder !== '' && <div className={styles.emptySection}>Select a folder</div>}
-        {selectedFolder && (
-          <div className={styles.section}>
-            <div className={styles.sectionHeader}>
-              <div className={styles.header}>
-                <Folder className="h-6 w-6" />
-                <h2 className={styles.title}>{selectedFolder.split('/').pop()}</h2>
-              </div>
-            </div>
-            <div className={`${styles.sectionContent} ${isEditing ? styles.editingContent : ''}`}>
-              <div className={styles.imageSection}>
-                <ImageCarousel images={images} basePath={`/land/${selectedFolder}`} />
-              </div>
-              <div className={`${styles.mdContent} ${isEditing ? styles.editingMdContent : ''}`}>
-                {isEditing ? (
-                  <Textarea
-                    className={styles.editor}
-                    value={fileContent}
-                    onChange={e => setFileContent(e.target.value)}
-                  />
-                ) : (
-                  <ScrollArea className={styles.contentArea}>
-                    <div className={styles.markdownContent}>
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{fileContent}</ReactMarkdown>
-                    </div>
-                  </ScrollArea>
-                )}
-                <div className={styles.buttonContainer}>
-                  {!isEditing ? (
-                    <Button className={styles.button} onClick={() => setIsEditing(true)}>
-                      Edit
-                    </Button>
-                  ) : (
-                    <>
-                      <Button className={styles.button} onClick={handleSave}>
-                        Save Changes
-                      </Button>
-                      <Button className={styles.button} onClick={() => setIsEditing(false)}>
-                        Cancel
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+    <ManagerWrapper
+      selectedItem={selectedFolder}
+      fileContent={fileContent}
+      isEditing={isEditing}
+      onEdit={() => setIsEditing(true)}
+      onSave={handleSave}
+      onCancel={() => setIsEditing(false)}
+      onContentChange={setFileContent}
+      title="Land"
+      images={images}
+      basePath={`/land/${selectedFolder}`}>
+      <div className={styles.fileTree}>
+        {typeof structure === 'object' && !Array.isArray(structure) ? renderStructure(structure) : null}
       </div>
-
-      <ScrollArea className={styles.rightPanel}>
-        <div className={styles.rootTitle}>Land</div>
-        <div className={styles.fileTree}>
-          {typeof structure === 'object' && !Array.isArray(structure) ? renderStructure(structure) : null}
-        </div>
-      </ScrollArea>
-    </div>
+    </ManagerWrapper>
   );
 }

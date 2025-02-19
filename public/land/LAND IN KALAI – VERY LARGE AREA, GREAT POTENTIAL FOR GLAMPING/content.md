@@ -1,4 +1,4 @@
-📍 **LAND IN KALAI – VERY LARGE AREA, GREAT POTENTIAL FOR GLAMPING**  
+📍 **LAND IN KALAI – VERY LARGE AREA, GREAT POTENTIAL FOR GLAMPING**
 
 📏 **Size**: 11 rai (~17,600 sq. m)  
 📍 **Location**: Kalai, Phang Nga Province  

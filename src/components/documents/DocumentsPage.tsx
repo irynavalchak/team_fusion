@@ -1,8 +1,12 @@
-import {getDirectoryStructure} from '../../utils/fileSystem';
-import FileManager from './components/file_manager/FileManager';
+import {getDocumentsDirectoryStructure} from '../../utils/fileSystem';
+import DocumentsManager from './components/documents_manager/DocumentsManager';
+
+interface DirectoryStructure {
+  [key: string]: DirectoryStructure | string[];
+}
 
 export default async function Home() {
-  const structure = await getDirectoryStructure('./public');
+  const structure: DirectoryStructure = await getDocumentsDirectoryStructure('./public/documents');
 
-  return <FileManager initialStructure={structure} />;
+  return <DocumentsManager initialStructure={structure} />;
 }

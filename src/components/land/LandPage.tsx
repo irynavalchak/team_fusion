@@ -1,8 +1,8 @@
-import {getDirectoryStructure} from '../../utils/fileSystem';
+import {getLandDirectoryStructure} from '../../utils/fileSystem';
 import LandManager from './components/land_manager/LandManager';
 
 export default async function Home() {
-  const structure = await getDirectoryStructure('./public');
+  const structure = await getLandDirectoryStructure('./public');
 
   return <LandManager initialStructure={structure} />;
 }

@@ -1,11 +1,11 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-interface DirectoryStructure {
+export interface DirectoryStructure {
   [key: string]: DirectoryStructure | string[];
 }
 
-export async function getDirectoryStructure(dir: string): Promise<DirectoryStructure> {
+export async function getLandDirectoryStructure(dir: string): Promise<DirectoryStructure> {
   const structure: DirectoryStructure = {};
 
   async function readDir(currentPath: string) {
@@ -15,7 +15,7 @@ export async function getDirectoryStructure(dir: string): Promise<DirectoryStruc
       const itemPath = path.join(currentPath, item.name);
 
       if (item.isDirectory()) {
-        structure[item.name] = await getDirectoryStructure(itemPath);
+        structure[item.name] = await getLandDirectoryStructure(itemPath);
       } else if (item.name.endsWith('.md') || isImageFile(item.name)) {
         if (!structure['files']) structure['files'] = [];
         if (Array.isArray(structure['files'])) {
@@ -29,19 +29,25 @@ export async function getDirectoryStructure(dir: string): Promise<DirectoryStruc
   return structure;
 }
 
+export async function getDocumentsDirectoryStructure(dir: string): Promise<DirectoryStructure> {
+  const items = await fs.readdir(dir, {withFileTypes: true});
+  const structure: Record<string, string[]> = {'/': []};
+
+  for (const item of items) {
+    if (item.isDirectory()) {
+      const subItems = await fs.readdir(path.join(dir, item.name));
+      structure[item.name] = subItems.filter(file => file.endsWith('.md'));
+    } else if (item.name.endsWith('.md')) {
+      structure['/'].push(item.name);
+    }
+  }
+
+  return structure;
+}
+
 function isImageFile(filename: string): boolean {
   const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
   return imageExtensions.some(ext => filename.toLowerCase().endsWith(ext));
-}
-
-export async function readMarkdownFile(filePath: string) {
-  try {
-    const content = await fs.readFile(filePath, 'utf-8');
-    return content;
-  } catch (error) {
-    console.error('Error reading file:', error);
-    return null;
-  }
 }
 
 export async function writeMarkdownFile(filePath: string, content: string) {

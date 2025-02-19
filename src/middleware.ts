@@ -48,13 +48,18 @@ export default function middleware(request: NextRequestWithAuth) {
     return corsMiddleware(request);
   }
 
-  // Excluding `/api/files_manager` from authorization checking
-  if (pathname.startsWith('/api/files_manager')) {
+  // Excluding `/api/documents_manager` from authorization checking
+  if (pathname.startsWith('/api/documents_manager')) {
     return corsMiddleware(request);
   }
 
   // Excluding `/api/land_manager` from authorization checking
   if (pathname.startsWith('/api/land_manager')) {
+    return corsMiddleware(request);
+  }
+
+  // Excluding `/api/save_file_md` from authorization checking
+  if (pathname.startsWith('/api/save_file_md')) {
     return corsMiddleware(request);
   }
 

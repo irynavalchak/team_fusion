@@ -49,12 +49,12 @@ const NavBar: FC = () => {
             <Nav.Link as={Link} href="/land" onClick={() => setExpanded(false)}>
               Land
             </Nav.Link>
+            <Nav.Link as={Link} href="/documents" onClick={() => setExpanded(false)}>
+              Documents
+            </Nav.Link>
 
             {isTabsShow && (
               <>
-                <Nav.Link as={Link} href="/documents" onClick={() => setExpanded(false)}>
-                  Documents
-                </Nav.Link>
                 <Nav.Link as={Link} href="/team" onClick={() => setExpanded(false)}>
                   Team
                 </Nav.Link>

@@ -3,13 +3,15 @@ import fs from 'fs/promises';
 import path from 'path';
 
 export async function POST(request: Request) {
-  const {path: filePath, content} = await request.json();
+  const {path: filePath, content, folder} = await request.json();
 
-  if (!filePath || content === undefined) {
+  if (!filePath || content === undefined || !folder) {
     return NextResponse.json({error: 'Invalid request'}, {status: 400});
   }
 
-  const fullPath = path.join(process.cwd(), 'public', 'land', filePath);
+  const baseFolder = folder === 'land' ? 'land' : 'documents';
+
+  const fullPath = path.join(process.cwd(), 'public', baseFolder, filePath);
 
   try {
     await fs.writeFile(fullPath, content);
