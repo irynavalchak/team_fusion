@@ -45,7 +45,7 @@ export const getAccounts = async () => {
   try {
     const response = await axios.get('/api/account');
 
-    const accounts: Account[] = response?.data?.accounts?.map((account: AccountModel) => ({
+    const accounts: Account[] = response?.data?.finance_accounts?.map((account: AccountModel) => ({
       id: account.id,
       organizationId: account.organization_id,
       name: account.name,
@@ -70,15 +70,17 @@ export const getOrganizations = async () => {
   try {
     const response = await axios.get('/api/organization');
 
-    const organizations: Organization[] = response?.data?.organizations?.map((organization: OrganizationModel) => ({
-      id: organization.id,
-      name: organization.name,
-      country: organization.country,
-      currency: organization.currency,
-      taxId: organization.tax_id,
-      createdAt: organization.created_at,
-      updatedAt: organization.updated_at
-    }));
+    const organizations: Organization[] = response?.data?.finance_organizations?.map(
+      (organization: OrganizationModel) => ({
+        id: organization.id,
+        name: organization.name,
+        country: organization.country,
+        currency: organization.currency,
+        taxId: organization.tax_id,
+        createdAt: organization.created_at,
+        updatedAt: organization.updated_at
+      })
+    );
 
     return organizations;
   } catch (error) {
@@ -91,7 +93,7 @@ export const getTransactionCategories = async () => {
   try {
     const response = await axios.get('/api/transaction_category');
 
-    const organizations: TransactionCategory[] = response?.data?.transaction_categories?.map(
+    const organizations: TransactionCategory[] = response?.data?.finance_transaction_categories?.map(
       (category: TransactionCategoryModel) => ({
         id: category.id,
         name: category.name,
@@ -117,7 +119,7 @@ export const getMonthlyTransactions = async (organizationId: string, startDate: 
       }
     });
 
-    const transactions: Transaction[] = response?.data?.transactions?.map((transaction: TransactionModel) => ({
+    const transactions: Transaction[] = response?.data?.finance_transactions?.map((transaction: TransactionModel) => ({
       id: transaction.id,
       organizationId: transaction.organization_id,
       categoryId: transaction.category_id,
