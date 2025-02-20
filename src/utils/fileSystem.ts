@@ -30,19 +30,25 @@ export async function getLandDirectoryStructure(dir: string): Promise<DirectoryS
 }
 
 export async function getDocumentsDirectoryStructure(dir: string): Promise<DirectoryStructure> {
-  const items = await fs.readdir(dir, {withFileTypes: true});
-  const structure: Record<string, string[]> = {'/': []};
+  async function readDirectory(currentPath: string): Promise<Record<string, string[] | DirectoryStructure>> {
+    const items = await fs.readdir(currentPath, {withFileTypes: true});
+    const structure: Record<string, DirectoryStructure | string[]> = {};
 
-  for (const item of items) {
-    if (item.isDirectory()) {
-      const subItems = await fs.readdir(path.join(dir, item.name));
-      structure[item.name] = subItems.filter(file => file.endsWith('.md'));
-    } else if (item.name.endsWith('.md')) {
-      structure['/'].push(item.name);
+    for (const item of items) {
+      const fullPath = path.join(currentPath, item.name);
+
+      if (item.isDirectory()) {
+        structure[item.name] = await readDirectory(fullPath);
+      } else if (item.name.endsWith('.md')) {
+        if (!structure['/']) structure['/'] = [];
+        (structure['/'] as string[]).push(item.name);
+      }
     }
+
+    return structure;
   }
 
-  return structure;
+  return readDirectory(dir);
 }
 
 function isImageFile(filename: string): boolean {

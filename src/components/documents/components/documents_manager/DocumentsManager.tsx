@@ -4,7 +4,6 @@ import {useState, useEffect} from 'react';
 import axios from 'axios';
 import {File, Folder} from 'lucide-react';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from 'components/ui/accordion';
-
 import ManagerWrapper from 'components/manager_wrapper/ManagerWrapper';
 
 import styles from './DocumentsManager.module.css';
@@ -17,7 +16,7 @@ interface DirectoryStructure {
   [key: string]: DirectoryStructure | string[];
 }
 
-export default function DocumentsManager({initialStructure}: DirectoryStructure) {
+export default function DocumentsManager({initialStructure}: {initialStructure: DirectoryStructure}) {
   const [structure, setStructure] = useState(initialStructure);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState<string>('');
@@ -35,29 +34,21 @@ export default function DocumentsManager({initialStructure}: DirectoryStructure)
       const response = await axios.get('/api/documents_manager', {
         params: {path: filePath}
       });
-
-      const {content} = response.data;
-
-      if (content) {
-        setFileContent(content);
-      } else {
-        setFileContent('');
-      }
+      setFileContent(response.data.content || '');
     } catch (error) {
       console.error('Error fetching file:', error);
+      setFileContent('Error loading file content.');
     }
   };
 
   const handleSave = async () => {
     if (!selectedFile) return;
-
     try {
       const response = await axios.post('/api/save_file_md', {
         path: selectedFile,
         content: fileContent,
         folder: 'documents'
       });
-
       if (response.status === 200) {
         setIsEditing(false);
       }
@@ -66,40 +57,48 @@ export default function DocumentsManager({initialStructure}: DirectoryStructure)
     }
   };
 
-  const handleFileSelect = (folder: string, file: string) => {
-    const filePath = folder === '/' ? file : `${folder}/${file}`;
+  const handleFileSelect = (filePath: string) => {
     setSelectedFile(filePath);
     setActiveItem(filePath);
   };
 
-  const renderStructure = (data: FolderStructure) => {
-    return Object.entries(data).map(([folder, files]) => (
-      <Accordion type="single" collapsible key={folder}>
-        <AccordionItem value={folder}>
-          <AccordionTrigger className={styles.folderItem}>
-            <Folder className="h-4 w-4 mr-2" />
-            {folder === '/' ? 'Root' : folder}
-          </AccordionTrigger>
-          <AccordionContent>
-            {Array.isArray(files) &&
-              files.map((file: string) => {
-                const filePath = folder === '/' ? file : `${folder}/${file}`;
-                const isActive = activeItem === filePath;
+  const toggleFolder = () => {
+    setSelectedFile(null);
+    setFileContent('');
+  };
 
-                return (
-                  <div
-                    key={file}
-                    className={`${styles.fileItem} ${isActive ? styles.selectedFile : ''}`}
-                    onClick={() => handleFileSelect(folder, file)}>
-                    <File className="h-4 w-4 mr-2" />
-                    <span>{file}</span>
-                  </div>
-                );
-              })}
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    ));
+  const renderStructure = (data: FolderStructure, parentPath = '') => {
+    return Object.entries(data).map(([key, content]) => {
+      const currentPath = parentPath ? `${parentPath}/${key}` : key;
+      if (typeof content === 'object' && content !== null && !Array.isArray(content)) {
+        return (
+          <Accordion type="single" collapsible key={currentPath}>
+            <AccordionItem value={currentPath}>
+              <AccordionTrigger className={styles.folderItem} onClick={() => toggleFolder()}>
+                <Folder className="h-4 w-4 mr-2" />
+                {key}
+              </AccordionTrigger>
+              <AccordionContent>{renderStructure(content as FolderStructure, currentPath)}</AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        );
+      } else if (Array.isArray(content)) {
+        return content.map((file: string) => {
+          const filePath = `${parentPath}/${file}`;
+          const isActive = activeItem === filePath;
+          return (
+            <div
+              key={filePath}
+              className={`${styles.fileItem} ${isActive ? styles.selectedFile : ''}`}
+              onClick={() => handleFileSelect(filePath)}>
+              <File className="h-4 w-4 mr-2" />
+              <span>{file}</span>
+            </div>
+          );
+        });
+      }
+      return null;
+    });
   };
 
   return (
