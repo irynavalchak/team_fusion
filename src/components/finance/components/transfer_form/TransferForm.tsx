@@ -89,7 +89,7 @@ const TransferForm: FC<TransferFormProps> = ({onCancel}) => {
 
       const response = await createTransaction(transactionData);
 
-      const transactionId = response?.insert_transactions_one?.id;
+      const transactionId = response?.insert_finance_transactions_one?.id;
 
       const transferData: Transfer = {
         transactionId,
