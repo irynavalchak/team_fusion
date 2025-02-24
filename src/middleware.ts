@@ -63,6 +63,16 @@ export default function middleware(request: NextRequestWithAuth) {
     return corsMiddleware(request);
   }
 
+  // Excluding `/api/projects` from authorization checking
+  if (pathname.startsWith('/api/projects')) {
+    return corsMiddleware(request);
+  }
+
+  // Excluding `/api/userData` from authorization checking
+  if (pathname.startsWith('/api/userData')) {
+    return corsMiddleware(request);
+  }
+
   // For protected routes, withAuth will handle the authentication
   // For all other routes, continue without modification
   return withAuth(request, {

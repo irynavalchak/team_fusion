@@ -138,3 +138,98 @@ export const getMonthlyTransactions = async (organizationId: string, startDate: 
     return [];
   }
 };
+
+export const getProjects = async (): Promise<Project[]> => {
+  try {
+    const response = await axios.get('/api/projects');
+    const data = response.data.projects.projects;
+
+    const projects: Project[] = data.map((project: ProjectModel) => ({
+      id: project.id,
+      name: project.name,
+      missions: project.missions.map((mission: MissionModel) => ({
+        id: mission.id,
+        name: mission.name,
+        status: mission.status,
+        createdAt: mission.created_at,
+        tasks: mission.tasks.map((task: TaskModel) => ({
+          id: task.id,
+          title: task.title,
+          description: task.description,
+          status: task.status,
+          createdAt: task.created_at
+        }))
+      }))
+    }));
+
+    return projects;
+  } catch (error) {
+    console.error('Error getting projects:', error);
+    return [];
+  }
+};
+
+export const getUserData = async (): Promise<UserData | null> => {
+  try {
+    const response = await axios.get('/api/userData');
+
+    const data: UserDataModel = response.data.users;
+
+    const userData: UserData = {
+      users: data.users.map((user: UserModel) => ({
+        id: user.id,
+        name: user.name,
+        email: user.email
+      })),
+      missionUsers: data.mission_users.map((missionUser: MissionUserModel) => ({
+        missionId: missionUser.mission_id,
+        userId: missionUser.user_id
+      })),
+      taskUsers: data.task_users.map((taskUser: TaskUserModel) => ({
+        taskId: taskUser.task_id,
+        userId: taskUser.user_id
+      }))
+    };
+
+    return userData;
+  } catch (error) {
+    console.error('Error getting user data:', error);
+    return null;
+  }
+};
+
+export const getMissionById = async (projectId: string, missionId: string): Promise<Mission | null> => {
+  try {
+    const response = await axios.get('/api/projects');
+    const projects: ProjectModel[] = response.data.projects.projects;
+
+    const project = projects.find(p => p.id === projectId);
+    if (!project) {
+      return null;
+    }
+
+    const missionData = project.missions.find(m => m.id === missionId);
+    if (!missionData) {
+      return null;
+    }
+
+    const mission: Mission = {
+      id: missionData.id,
+      name: missionData.name,
+      status: missionData.status,
+      createdAt: missionData.created_at,
+      tasks: missionData.tasks.map((task: TaskModel) => ({
+        id: task.id,
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        createdAt: task.created_at
+      }))
+    };
+
+    return mission;
+  } catch (error) {
+    console.error('Error getting mission:', error);
+    return null;
+  }
+};

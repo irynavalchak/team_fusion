@@ -1,0 +1,34 @@
+.taskCard {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  min-height: 80px;
+  border: solid 2px #bababa;
+  font-size: 13px;
+  position: relative;
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.taskContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-left: 8px;
+}
+
+.taskTitle {
+  font-weight: bold;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.taskDescription {
+  color: #666;
+  overflow-wrap: break-word;
+  white-space: normal;
+}

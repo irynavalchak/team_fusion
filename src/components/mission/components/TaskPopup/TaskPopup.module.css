@@ -1,0 +1,41 @@
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* Стилі для контейнера поля введення заголовку */
+.inputField {
+  width: 100%;
+  margin-bottom: 16px; /* Відступ між заголовком і описом */
+}
+
+/* Стилі для текстового поля опису */
+.textareaField {
+  width: 100%;
+  resize: vertical; /* Дозволяє змінювати висоту поля вертикально */
+}
+
+/* Стилі для футеру модального вікна */
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* Додаткові стилі для покращення вигляду модального вікна */
+.dialogContent {
+  max-width: 500px; /* Обмеження максимальної ширини модального вікна */
+  width: 100%;
+}
+
+/* Стилі для заголовку модального вікна */
+.dialogHeader {
+  margin-bottom: 16px;
+}
+
+/* Стилі для заголовку завдання */
+.dialogTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+}

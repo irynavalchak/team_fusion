@@ -1,0 +1,64 @@
+{
+  "users": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "name": "John Doe",
+      "email": "john.doe@example.com"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440002",
+      "name": "Alice Johnson",
+      "email": "alice.johnson@example.com"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440003",
+      "name": "Bob Brown",
+      "email": "bob.brown@example.com"
+    }
+  ],
+  "mission_users": [
+    {
+      "mission_id": "f2e1d0c9-b8a7-6543-210f-fedcba987654",
+      "user_id": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    {
+      "mission_id": "f2e1d0c9-b8a7-6543-210f-fedcba987654",
+      "user_id": "550e8400-e29b-41d4-a716-446655440001"
+    },
+    {
+      "mission_id": "e3f2d1c0-a9b8-7654-3210-def012345678",
+      "user_id": "550e8400-e29b-41d4-a716-446655440002"
+    },
+    {
+      "mission_id": "d4e3f2c1-b0a9-8765-4321-efd012345678",
+      "user_id": "550e8400-e29b-41d4-a716-446655440003"
+    },
+    {
+      "mission_id": "e5f4d3c2-c1b0-9876-5432-fde012345678",
+      "user_id": "550e8400-e29b-41d4-a716-446655440000"
+    }
+  ],
+  "task_users": [
+    {
+      "task_id": "98765432-10fe-dcba-7654-3210fedcba98",
+      "user_id": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    {
+      "task_id": "87654321-0fed-cba9-6543-210fedcba987",
+      "user_id": "550e8400-e29b-41d4-a716-446655440001"
+    },
+    {
+      "task_id": "76543210-fedc-ba98-5432-10fedcba9876",
+      "user_id": "550e8400-e29b-41d4-a716-446655440002"
+    },
+    {
+      "task_id": "6543210f-edcb-a987-4321-0fedcba98765",
+      "user_id": "550e8400-e29b-41d4-a716-446655440003"
+    }
+  ]
+}

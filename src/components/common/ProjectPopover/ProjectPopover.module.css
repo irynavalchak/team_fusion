@@ -1,0 +1,50 @@
+.popoverDots {
+  background: #e5e5e5;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.popoverDots:hover {
+  background: #d4d4d4;
+}
+
+.popoverContent {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: max-content;
+  padding: 0;
+}
+
+.popoverButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 4px;
+  border: none !important;
+  background: none;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.popoverButton:hover {
+  background: #e5e5e5;
+  border: none !important;
+}
+
+.popoverText {
+  font-size: 12px;
+  white-space: nowrap;
+}
