@@ -29,28 +29,6 @@ export async function getLandDirectoryStructure(dir: string): Promise<DirectoryS
   return structure;
 }
 
-export async function getDocumentsDirectoryStructure(dir: string): Promise<DirectoryStructure> {
-  async function readDirectory(currentPath: string): Promise<Record<string, string[] | DirectoryStructure>> {
-    const items = await fs.readdir(currentPath, {withFileTypes: true});
-    const structure: Record<string, DirectoryStructure | string[]> = {};
-
-    for (const item of items) {
-      const fullPath = path.join(currentPath, item.name);
-
-      if (item.isDirectory()) {
-        structure[item.name] = await readDirectory(fullPath);
-      } else if (item.name.endsWith('.md')) {
-        if (!structure['/']) structure['/'] = [];
-        (structure['/'] as string[]).push(item.name);
-      }
-    }
-
-    return structure;
-  }
-
-  return readDirectory(dir);
-}
-
 function isImageFile(filename: string): boolean {
   const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
   return imageExtensions.some(ext => filename.toLowerCase().endsWith(ext));

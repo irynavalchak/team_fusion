@@ -48,8 +48,8 @@ export default function middleware(request: NextRequestWithAuth) {
     return corsMiddleware(request);
   }
 
-  // Excluding `/api/documents_manager` from authorization checking
-  if (pathname.startsWith('/api/documents_manager')) {
+  // Excluding `/api/documents` from authorization checking
+  if (pathname.startsWith('/api/documents')) {
     return corsMiddleware(request);
   }
 
@@ -60,6 +60,11 @@ export default function middleware(request: NextRequestWithAuth) {
 
   // Excluding `/api/save_file_md` from authorization checking
   if (pathname.startsWith('/api/save_file_md')) {
+    return corsMiddleware(request);
+  }
+
+  // Excluding `/api/save_document` from authorization checking
+  if (pathname.startsWith('/api/save_document')) {
     return corsMiddleware(request);
   }
 

@@ -1,0 +1,106 @@
+.fileTree {
+  list-style: none;
+  padding: 0;
+}
+
+.selectedFile {
+  background-color: #e3f2fd;
+  font-weight: bold;
+}
+
+.fileItem {
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #999;
+}
+
+.fileItem span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #222;
+}
+
+.fileItem:hover {
+  background: #e3f2fd;
+}
+
+.newButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px;
+  border: 2px solid #007bff;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #007bff;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.newButton:hover {
+  background-color: #007bff2a;
+  text-decoration: none;
+}
+
+.languageWrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.languageSelector select {
+  appearance: none;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  padding: 6px 28px 6px 10px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333333;
+  cursor: pointer;
+  outline: none;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  width: auto;
+  max-width: 140px;
+}
+
+.languageSelector select:hover {
+  border-color: #999999;
+}
+
+.languageSelector select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.languageSelector {
+  position: relative;
+  display: inline-block;
+}
+
+.languageSelector::after {
+  content: '▼';
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 10px;
+  color: #666666;
+}
+
+.languageSelector select option {
+  font-size: 10px;
+  color: #333333;
+  padding: 6px 10px;
+}

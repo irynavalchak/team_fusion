@@ -2,11 +2,13 @@ import {configureStore} from '@reduxjs/toolkit';
 
 import financialSlice from './reducers/financialSlice';
 import projectsSlice from './reducers/projectsSlice';
+import documentsSlice from './reducers/documentsSlice';
 
 export const store = configureStore({
   reducer: {
     financial: financialSlice,
-    projects: projectsSlice
+    projects: projectsSlice,
+    documents: documentsSlice
   }
 });
 
