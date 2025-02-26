@@ -10,8 +10,6 @@ import styles from './AuthButton.module.css';
 const AuthButton: FC = () => {
   const {data: session} = useSession();
 
-  console.log(session);
-
   if (session) {
     return (
       <NavDropdown

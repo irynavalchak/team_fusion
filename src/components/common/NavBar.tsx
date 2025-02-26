@@ -1,14 +1,25 @@
 'use client';
 
-import React, {FC, useState} from 'react';
+import React, {FC, useState, useMemo} from 'react';
 import Link from 'next/link';
 import {Container, Nav, Navbar} from 'components/bootstrap';
+import {useSession} from 'next-auth/react';
+
+import ROLE from 'constants/role';
+
 import AuthButton from 'components/common/AuthButton';
 
 const isTabsShow = process.env.NEXT_PUBLIC_SHOW_ALL_NAVBAR_TABS === 'true';
 
 const NavBar: FC = () => {
+  const {data: session} = useSession();
+
   const [expanded, setExpanded] = useState(false);
+
+  const roles = useMemo<string[]>(() => session?.user?.roles ?? [], [session]);
+
+  const isDeveloper = useMemo(() => roles.includes(ROLE.DEV), [roles]);
+  const isAdmin = useMemo(() => roles.includes(ROLE.ADMIN), [roles]);
 
   return (
     <Navbar
@@ -40,21 +51,30 @@ const NavBar: FC = () => {
             <Nav.Link as={Link} href="/" onClick={() => setExpanded(false)}>
               Dashboard
             </Nav.Link>
-            <Nav.Link as={Link} href="/finance" onClick={() => setExpanded(false)}>
-              Finance
-            </Nav.Link>
-            <Nav.Link as={Link} href="/ai_assistant" onClick={() => setExpanded(false)}>
-              AI Assistant
-            </Nav.Link>
+            {isAdmin && (
+              <Nav.Link as={Link} href="/finance" onClick={() => setExpanded(false)}>
+                Finance
+              </Nav.Link>
+            )}
+
+            {isDeveloper && (
+              <Nav.Link as={Link} href="/ai_assistant" onClick={() => setExpanded(false)}>
+                AI Assistant
+              </Nav.Link>
+            )}
+
             <Nav.Link as={Link} href="/land" onClick={() => setExpanded(false)}>
               Land
             </Nav.Link>
             <Nav.Link as={Link} href="/documents" onClick={() => setExpanded(false)}>
               Documents
             </Nav.Link>
-            <Nav.Link as={Link} href="/projects" onClick={() => setExpanded(false)}>
-              Projects
-            </Nav.Link>
+
+            {isDeveloper && (
+              <Nav.Link as={Link} href="/projects" onClick={() => setExpanded(false)}>
+                Projects
+              </Nav.Link>
+            )}
 
             {isTabsShow && (
               <>

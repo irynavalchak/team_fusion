@@ -5,6 +5,7 @@ import {Providers} from 'redux_state/provider';
 
 import AppPage from 'components/AppPage';
 import NavBar from 'components/common/NavBar';
+import ProtectedLayout from './protected-layout';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -25,10 +26,10 @@ export default function RootLayout({
       <body>
         <Providers>
           <AppPage>
-            <NavBar />
-
-            <main style={{marginTop: '56px'}}>{children}</main>
-
+            <ProtectedLayout>
+              <NavBar />
+              <main style={{marginTop: '56px'}}>{children}</main>
+            </ProtectedLayout>
             <Toaster />
           </AppPage>
         </Providers>
