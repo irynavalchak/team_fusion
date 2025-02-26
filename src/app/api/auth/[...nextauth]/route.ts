@@ -4,6 +4,12 @@ import axios from 'axios';
 
 import ROLE from 'constants/role';
 
+interface UserRole {
+  role: {
+    role_name: string;
+  };
+}
+
 const API_BASE_URL = process.env.API_BASE_URL || '';
 
 const handler = NextAuth({
@@ -133,7 +139,7 @@ const handler = NextAuth({
               ...session.user,
               id: userData.id,
               discord_id: userData.discord_id,
-              roles: userData.user_roles_new?.map((item: any) => item?.role?.role_name) || [ROLE.GUEST],
+              roles: userData.user_roles_new?.map((item: UserRole) => item?.role?.role_name) || [ROLE.GUEST],
               username: userData.username
             }
           };
