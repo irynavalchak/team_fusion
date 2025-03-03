@@ -1,5 +1,6 @@
 import type {Metadata} from 'next';
 import {Toaster} from 'components/ui/toaster';
+import {ToastContainer} from 'react-toastify';
 
 import {Providers} from 'redux_state/provider';
 
@@ -31,6 +32,7 @@ export default function RootLayout({
               <main style={{marginTop: '56px'}}>{children}</main>
             </ProtectedLayout>
             <Toaster />
+            <ToastContainer position="bottom-left" />
           </AppPage>
         </Providers>
       </body>

@@ -1,20 +1,25 @@
 'use client';
 
 import {ReactNode} from 'react';
-import {Button} from 'components/ui/button';
-import {ScrollArea} from 'components/ui/scroll-area';
-import {Textarea} from 'components/ui/textarea';
+import {usePathname} from 'next/navigation';
+
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+import {Button} from 'components/ui/button';
+import {ScrollArea} from 'components/ui/scroll-area';
+import {Textarea} from 'components/ui/textarea';
+
 import ImageCarousel from 'components/land/components/image_carousel/ImageCarousel';
+import Confirmation from '../common/Confirmation/Confirmation';
 
 import styles from './ManagerWrapper.module.css';
 
 interface ManagerWrapperProps {
   children: ReactNode;
   selectedItem: string | null;
-  fileContent: string;
+  selectedLanguage: string;
+  selectedContent: string;
   isEditing: boolean;
   onEdit: () => void;
   onSave: () => void;
@@ -23,12 +28,19 @@ interface ManagerWrapperProps {
   title: string;
   images?: string[];
   basePath?: string;
+  shareButton?: React.ReactNode;
+  isReadOnly?: boolean;
+  cancelDelete?: () => void;
+  onDelete?: () => void;
+  isConfirmationOpen?: boolean;
+  handleDeleteDocumentContent?: () => void;
 }
 
 export default function ManagerWrapper({
   children,
   selectedItem,
-  fileContent,
+  selectedLanguage,
+  selectedContent,
   isEditing,
   onEdit,
   onSave,
@@ -36,8 +48,15 @@ export default function ManagerWrapper({
   onContentChange,
   title,
   images,
-  basePath
+  basePath,
+  shareButton,
+  isReadOnly,
+  cancelDelete,
+  onDelete,
+  isConfirmationOpen,
+  handleDeleteDocumentContent
 }: ManagerWrapperProps) {
+  const pathName = usePathname();
   return (
     <div className={styles.container}>
       <div className={styles.leftPanel}>
@@ -47,9 +66,8 @@ export default function ManagerWrapper({
         {selectedItem && (
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
-              <div className={styles.header}>
-                <h2 className={styles.title}>{selectedItem.split('/').pop()}</h2>
-              </div>
+              <h2 className={styles.title}>{selectedItem.split('/').pop()}</h2>
+              {!isReadOnly && shareButton && <div className={styles.shareIcon}>{shareButton}</div>}
             </div>
             <div className={`${styles.sectionContent} ${isEditing ? styles.editingContent : ''}`}>
               {images && basePath && (
@@ -61,42 +79,60 @@ export default function ManagerWrapper({
                 {isEditing ? (
                   <Textarea
                     className={styles.editor}
-                    value={fileContent}
+                    value={selectedContent}
                     onChange={e => onContentChange(e.target.value)}
                   />
                 ) : (
                   <ScrollArea className={styles.contentArea}>
                     <div className={styles.markdownContent}>
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{fileContent}</ReactMarkdown>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{selectedContent}</ReactMarkdown>
                     </div>
                   </ScrollArea>
                 )}
-                <div className={styles.buttonContainer}>
-                  {!isEditing ? (
-                    <Button className={styles.button} onClick={onEdit}>
-                      Edit
-                    </Button>
-                  ) : (
-                    <>
-                      <Button className={styles.button} onClick={onSave}>
-                        Save Changes
-                      </Button>
-                      <Button className={styles.button} onClick={onCancel}>
-                        Cancel
-                      </Button>
-                    </>
-                  )}
-                </div>
+                {!isReadOnly && (
+                  <div className={styles.buttonContainer}>
+                    {!isEditing ? (
+                      <>
+                        {pathName === '/documents' && selectedLanguage !== 'en' && (
+                          <button className={styles.buttonDelete} onClick={handleDeleteDocumentContent}>
+                            Delete
+                          </button>
+                        )}
+                        <button className={styles.buttonEdit} onClick={onEdit}>
+                          Edit
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <Button className={styles.button} onClick={onSave}>
+                          Save Changes
+                        </Button>
+                        <Button className={styles.button} onClick={onCancel}>
+                          Cancel
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
         )}
       </div>
 
-      <ScrollArea className={styles.rightPanel}>
-        <div className={styles.rootTitle}>{title}</div>
-        <div className={styles.fileTree}>{children}</div>
-      </ScrollArea>
+      {!isReadOnly && (
+        <ScrollArea className={styles.rightPanel}>
+          <div className={styles.rootTitle}>{title}</div>
+          <div className={styles.fileTree}>{children}</div>
+        </ScrollArea>
+      )}
+
+      <Confirmation
+        isOpen={isConfirmationOpen || false}
+        message="Are you sure you want to delete this content?"
+        onConfirm={onDelete ?? (() => {})}
+        onCancel={cancelDelete ?? (() => {})}
+      />
     </div>
   );
 }

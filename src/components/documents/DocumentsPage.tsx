@@ -1,200 +1,292 @@
 'use client';
 
 import React, {useState, useEffect} from 'react';
-
+import {useRouter, useSearchParams} from 'next/navigation';
 import axios from 'axios';
-import {File, Folder, Plus} from 'lucide-react';
-import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from 'components/ui/accordion';
-import {Button} from '../ui/button';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+import {toast} from 'react-toastify';
+import {Share2} from 'lucide-react';
 
 import {useAppSelector, useAppDispatch} from 'redux_state/hooks';
-import {updateDocumentContent, addNewDocument} from 'redux_state/reducers/documentsSlice';
+import {
+  addNewDocument,
+  addNewDocumentContent,
+  updateDocumentContent,
+  deleteDocumentContent
+} from 'redux_state/reducers/documentsSlice';
+
+import {buildTree} from '../../utils/buildTree';
+import {documentPath} from '../../utils/documentPath';
+import {encryptId, decryptId} from '../../utils/encryption';
+
+import useLoadingDocuments from './hooks/useLoadingDocuments';
+import useAutoTranslate from './hooks/useAutoTranslate';
+import useLoadDocumentFromUrl from './hooks/useLoadDocumentFromUrl';
 
 import ManagerWrapper from 'components/manager_wrapper/ManagerWrapper';
-import useLoadingDocuments from './hooks/useLoadingDocuments';
-import Loader from '../common/Loader/Loader';
 import NewDocumentPopup from './components/NewDocumentPopup/NewDocumentPopup';
-
-import styles from './DocumentsPage.module.css';
-
-interface TreeNode {
-  [key: string]: TreeNode | UserDocument;
-}
+import DocumentsBar from './components/DocumentsBar/DocumentsBar';
+import DocumentsTree from './components/DocumentsTree/DocumentsTree';
+import Loader from '../common/Loader/Loader';
 
 const DocumentsPage: React.FC = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const encryptedDocumentIdFromUrl = searchParams.get('id');
+  const encryptedContentIdFromUrl = searchParams.get('contentId');
+  const isEncrypted = encryptedDocumentIdFromUrl && !/^\d+$/.test(encryptedDocumentIdFromUrl);
+  const documentIdFromUrl = isEncrypted
+    ? decryptId(encryptedDocumentIdFromUrl)
+    : (encryptedDocumentIdFromUrl && parseInt(encryptedDocumentIdFromUrl, 10)) || null;
 
   const [selectedDocument, setSelectedDocument] = useState<UserDocument | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
-  const [fileContent, setFileContent] = useState<string>('');
+  const [selectedContent, setSelectedContent] = useState<string>('');
+  const [selectedContentId, setSelectedContentId] = useState<number | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [activeItem, setActiveItem] = useState<string | null>(null);
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // Стан для відкриття попапу
+  const [activeItem, setActiveItem] = useState<number | null>(documentIdFromUrl);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isCreatingDocument, setIsCreatingDocument] = useState(false);
+  const [newDocumentId, setNewDocumentId] = useState<number | null>(null);
+  const [isReadOnly, setIsReadOnly] = useState(false);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 
   const documents = useAppSelector(state => state.documents.documents);
   const {isLoadingDocuments} = useLoadingDocuments();
 
+  useLoadDocumentFromUrl(
+    !!isEncrypted,
+    encryptedDocumentIdFromUrl,
+    encryptedContentIdFromUrl,
+    documents,
+    setSelectedDocument,
+    setActiveItem,
+    setIsReadOnly,
+    setSelectedContentId,
+    setSelectedLanguage
+  );
+
+  useAutoTranslate(selectedDocument);
+
+  useEffect(() => {
+    if (newDocumentId !== null) {
+      router.push('/documents');
+    }
+  }, [newDocumentId, router]);
+
   useEffect(() => {
     if (selectedDocument) {
-      const content = selectedDocument.contents.find(c => c.languageCode === selectedLanguage);
-      setFileContent(content ? content.content : '');
+      const updatedDocument = documents.find(doc => doc.id === selectedDocument.id);
+      if (updatedDocument) {
+        setSelectedDocument(updatedDocument);
+      }
+    }
+  }, [documents, selectedDocument]);
+
+  useEffect(() => {
+    if (selectedDocument) {
+      const selectedContent =
+        selectedDocument.documentContents.find(c => c.languageCode === selectedLanguage) ||
+        selectedDocument.documentContents[0];
+
+      if (selectedContent) {
+        setSelectedContent(selectedContent.content);
+        setSelectedContentId(selectedContent.id);
+      }
     }
   }, [selectedDocument, selectedLanguage]);
-
-  const handleSave = async () => {
-    if (!selectedDocument) return;
-
-    try {
-      const response = await axios.post('/api/save_document', {
-        id: selectedDocument.id,
-        language_code: selectedLanguage,
-        content: fileContent,
-        last_modified_by: 'current-user-uuid'
-      });
-
-      if (response.status === 200) {
-        setIsEditing(false);
-        dispatch(
-          updateDocumentContent({
-            id: selectedDocument.id,
-            languageCode: selectedLanguage,
-            content: fileContent
-          })
-        );
-      }
-    } catch (error) {
-      console.error('Error saving document:', error);
-    }
-  };
 
   const handleDocumentSelect = (document: UserDocument) => {
     setSelectedDocument(document);
     setActiveItem(document.id);
-    setSelectedLanguage('en'); //default to English
+    setSelectedLanguage('en');
+
+    // Знаходимо контент для мови 'en'
+    const englishContent = document.documentContents.find(c => c.languageCode === 'en');
+    if (englishContent) {
+      setSelectedContentId(englishContent.id);
+      router.push(`/documents?id=${document.id}&contentId=${englishContent.id}`);
+    }
   };
 
-  const handleCreateNewDocument = () => {
-    setIsPopupOpen(true); // Відкриваємо попап
+  const handleLanguageChange = (language: string) => {
+    setSelectedLanguage(language);
+    const selectedContent = selectedDocument?.documentContents.find(c => c.languageCode === language);
+    if (selectedContent && selectedDocument) {
+      setSelectedContentId(selectedContent.id);
+      router.push(`/documents?id=${selectedDocument.id}&contentId=${selectedContent.id}`);
+    }
   };
 
-  const handleSaveNewDocument = (title: string, tagPath: string, content: string) => {
-    const newDocument: UserDocument = {
-      id: crypto.randomUUID(), // Генеруємо унікальний ID
-      title,
-      tagPath,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      createdBy: 'current-user-uuid', // Замінити на реальний ID користувача
-      lastModifiedBy: 'current-user-uuid',
-      contents: [
-        {
-          languageCode: 'en', // Мова за замовчуванням
-          content,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
-      ]
-    };
-
-    // Додаємо новий документ в Redux
-    dispatch(addNewDocument(newDocument));
-
-    // Закриваємо попап
-    setIsPopupOpen(false);
+  const handleOpenNewDocumentPopup = () => {
+    setIsPopupOpen(true);
   };
 
-  const buildTree = (docs: UserDocument[]): TreeNode => {
-    const tree: TreeNode = {};
-    docs?.forEach(doc => {
-      const parts = doc.tagPath.split('/');
-      let currentLevel = tree;
-      parts.forEach((part, index) => {
-        if (index === parts.length - 1) {
-          currentLevel[part] = doc;
-        } else {
-          if (!currentLevel[part]) {
-            currentLevel[part] = {};
-          }
-          currentLevel = currentLevel[part] as TreeNode;
-        }
+  const handleCreateNewDocument = async (title: string, tagPath: string) => {
+    setIsCreatingDocument(true);
+    try {
+      const response = await axios.post('/api/documents/create_document', {
+        title,
+        tag_path: tagPath,
+        created_by: null,
+        last_modified_by: null,
+        draft: true
       });
-    });
-    return tree;
-  };
-
-  const renderTree = (node: TreeNode, path: string = '') => {
-    return Object.entries(node).map(([key, value]) => {
-      const currentPath = path ? `${path}/${key}` : key;
-      if (value && typeof value === 'object' && !('id' in value)) {
-        return (
-          <Accordion type="single" collapsible key={currentPath}>
-            <AccordionItem value={currentPath}>
-              <AccordionTrigger className={styles.folderItem}>
-                <Folder className="h-4 w-4 mr-2" />
-                {key}
-              </AccordionTrigger>
-              <AccordionContent>{renderTree(value as TreeNode, currentPath)}</AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        );
-      } else if ('id' in value) {
-        const doc = value as UserDocument;
-        const isActive = activeItem === doc.id;
-        return (
-          <div
-            key={doc.id}
-            className={`${styles.fileItem} ${isActive ? styles.selectedFile : ''}`}
-            onClick={() => handleDocumentSelect(doc)}>
-            <File className="h-4 w-4 mr-2" />
-            <span>{doc.title}</span>
-          </div>
-        );
+      const documentId = response.data.insert_knowledge_base_documents_one.id;
+      if (response.status === 200 && documentId) {
+        setNewDocumentId(documentId);
+        dispatch(addNewDocument({id: documentId, title, tagPath}));
       }
-      return null;
-    });
+    } catch (error) {
+      console.error('Error creating document:', error);
+    } finally {
+      setIsCreatingDocument(false);
+    }
   };
 
-  const renderDocumentsBar = () => {
-    return (
-      <>
-        <div className={styles.languageWrapper}>
-          <Button variant="link" onClick={handleCreateNewDocument} className={styles.newButton}>
-            <Plus className="h-4 w-4" />
-            New
-          </Button>
-          {selectedDocument && (
-            <div className={styles.languageSelector}>
-              <select value={selectedLanguage} onChange={e => setSelectedLanguage(e.target.value)}>
-                {selectedDocument.contents.map(content => (
-                  <option key={content.languageCode} value={content.languageCode}>
-                    {content.languageCode.toUpperCase()}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-        </div>
-        {documents.length === 0 && <Loader />}
-      </>
-    );
+  const handleSaveNewDocumentContent = async (language: string, content: string) => {
+    if (!newDocumentId) return;
+    try {
+      await axios.post('/api/documents/create_document_content', {
+        document_id: newDocumentId,
+        language_code: language,
+        content
+      });
+      dispatch(addNewDocumentContent({documentId: newDocumentId, languageCode: language, content}));
+      setIsPopupOpen(false);
+      setNewDocumentId(null);
+    } catch (error) {
+      console.error('Error saving document content:', error);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!selectedDocument) return;
+    try {
+      const response = await axios.put('/api/documents/update_document_content', {
+        document_id: selectedDocument.id,
+        language_code: selectedLanguage,
+        content: selectedContent
+      });
+      if (response.status === 200) {
+        dispatch(
+          updateDocumentContent({
+            documentId: selectedDocument.id,
+            languageCode: selectedLanguage,
+            content: selectedContent
+          })
+        );
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.error('Error updating document content:', error);
+    }
   };
 
   const tree = buildTree(documents);
+  const path = documentIdFromUrl ? documentPath(documentIdFromUrl, tree) : [];
+
+  const handleCopyLink = () => {
+    if (selectedDocument && selectedContentId) {
+      const encryptedDocumentId = encryptId(selectedDocument.id);
+      const encryptedContentId = encryptId(selectedContentId);
+      const link = `${window.location.origin}/documents?id=${encryptedDocumentId}&contentId=${encryptedContentId}`;
+      navigator.clipboard.writeText(link);
+      toast.success('Link copied to clipboard!');
+    }
+  };
+
+  const cancelDelete = () => {
+    setIsConfirmationOpen(false);
+  };
+
+  const handleDeleteDocumentContent = () => {
+    setIsConfirmationOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!selectedDocument) return;
+
+    try {
+      const response = await axios.delete('/api/documents/delete_document_content', {
+        data: {
+          id: selectedContentId
+        }
+      });
+
+      if (response.status === 200 && selectedContentId) {
+        dispatch(
+          deleteDocumentContent({
+            documentId: selectedDocument.id,
+            contentId: selectedContentId
+          })
+        );
+
+        setIsEditing(false);
+        setSelectedContent('');
+        setSelectedContentId(null);
+
+        toast.success('Content deleted successfully!');
+        setIsConfirmationOpen(false);
+      }
+    } catch (error) {
+      console.error('Error deleting document content:', error);
+      toast.error('Failed to delete content.');
+    }
+  };
 
   return (
     <ManagerWrapper
       selectedItem={selectedDocument?.title || null}
-      fileContent={fileContent}
+      selectedContent={selectedContent}
+      selectedLanguage={selectedLanguage}
       isEditing={isEditing}
       onEdit={() => setIsEditing(true)}
       onSave={handleSave}
       onCancel={() => setIsEditing(false)}
-      onContentChange={setFileContent}
-      title="Documents">
-      {renderDocumentsBar()}
-      {renderTree(tree)}
-
-      <NewDocumentPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} onSave={handleSaveNewDocument} />
+      onContentChange={setSelectedContent}
+      title="Documents"
+      isReadOnly={isReadOnly}
+      isConfirmationOpen={isConfirmationOpen}
+      cancelDelete={cancelDelete}
+      onDelete={confirmDelete}
+      handleDeleteDocumentContent={handleDeleteDocumentContent}
+      shareButton={
+        <CopyToClipboard
+          text={`${window.location.origin}/documents?id=${encryptId(selectedDocument?.id || 0)}&contentId=${selectedContentId && encryptId(selectedContentId)}`}>
+          <button onClick={handleCopyLink} style={{cursor: 'pointer'}}>
+            <span role="img" aria-label="share">
+              <Share2 size={30} />
+            </span>
+          </button>
+        </CopyToClipboard>
+      }>
+      <DocumentsBar
+        onCreateNewDocument={handleOpenNewDocumentPopup}
+        selectedDocument={selectedDocument}
+        selectedLanguage={selectedLanguage}
+        onLanguageChange={handleLanguageChange}
+      />
+      <DocumentsTree
+        node={tree}
+        activeItem={activeItem}
+        openPaths={path || []}
+        onDocumentSelect={handleDocumentSelect}
+      />
+      {documents.length === 0 && <Loader />}
+      <NewDocumentPopup
+        isOpen={isPopupOpen}
+        onClose={() => {
+          setIsPopupOpen(false);
+          setNewDocumentId(null);
+        }}
+        onCreate={handleCreateNewDocument}
+        isCreating={isCreatingDocument}
+        documentId={newDocumentId}
+        onSaveContent={handleSaveNewDocumentContent}
+      />
     </ManagerWrapper>
   );
 };

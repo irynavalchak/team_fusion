@@ -62,19 +62,23 @@ export default async function middleware(request: NextRequestWithAuth, event: Ne
     return NextResponse.next();
   }
 
-  // Более простой подход: для API-путей используем единую обработку
-  if (pathname.startsWith('/api/')) {
-    // Создаем middleware для авторизации с CORS
-    return withAuth(
-      function onSuccess(req) {
-        return corsMiddleware(req);
-      },
-      {
-        callbacks: {
-          authorized: ({token}) => !!token
-        }
-      }
-    )(request, event);
+  // Excluding `/api/documents` from authorization checking
+  if (
+    pathname.startsWith('/api/documents/get_all_documents') ||
+    pathname.startsWith('/api/documents/create_document') ||
+    pathname.startsWith('/api/documents/create_document_content')
+  ) {
+    return corsMiddleware(request);
+  }
+
+  // Excluding `/api/land_manager` from authorization checking
+  if (pathname.startsWith('/api/land_manager')) {
+    return corsMiddleware(request);
+  }
+
+  // Excluding `/api/save_file_md` from authorization checking
+  if (pathname.startsWith('/api/save_file_md')) {
+    return corsMiddleware(request);
   }
 
   // Для всех остальных путей используем стандартную проверку авторизации

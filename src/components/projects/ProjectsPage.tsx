@@ -152,7 +152,6 @@ const ProjectsPage: React.FC = () => {
     setIsConfirmationOpen(false);
   };
 
-  // Функція для скасування видалення
   const cancelDelete = () => {
     setMissionToDelete(null);
     setIsConfirmationOpen(false);

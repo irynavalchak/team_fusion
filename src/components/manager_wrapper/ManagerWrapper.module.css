@@ -74,21 +74,6 @@
   font-weight: bold;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.title {
-  font-size: 24px;
-  font-weight: 600;
-  word-break: break-word;
-  color: #333;
-  max-width: 100%;
-  margin: 20px 0;
-}
-
 .section {
   border: 3px solid #444;
   border-radius: 3px;
@@ -114,10 +99,34 @@
   justify-content: space-between;
   align-items: center;
   padding: 14px;
-  cursor: pointer;
   background: #e3f2fd;
   font-weight: 500;
   border-bottom: 3px solid #444;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  word-break: break-word;
+  color: #333;
+  max-width: 100%;
+  margin: 20px 0;
+}
+
+.shareIcon {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.shareIcon:hover {
+  background: #48d0d2;
 }
 
 .sectionContent {
@@ -185,8 +194,8 @@
   justify-content: flex-end;
 }
 
-.button {
-  padding: 10px 18px;
+.buttonEdit {
+  padding: 6px 18px;
   background: #0070f3;
   color: white;
   border: none;
@@ -195,8 +204,14 @@
   font-weight: 500;
 }
 
-.button:hover {
-  background: #0051a2;
+.buttonDelete {
+  padding: 6px 18px;
+  background: #ef7474;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
 }
 
 .button:disabled {

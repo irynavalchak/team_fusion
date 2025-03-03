@@ -234,28 +234,38 @@ export const getMissionById = async (projectId: string, missionId: string): Prom
   }
 };
 
-export const getDocuments = async (): Promise<UserDocument[]> => {
+export const getAllDocuments = async (): Promise<UserDocument[]> => {
   try {
-    const response = await axios.get('/api/documents');
-    const data = response.data.documents;
+    const response = await axios.get('/api/documents/get_all_documents');
 
-    const documents: UserDocument[] = data.map((doc: UserDocumentModel) => ({
+    const data = response.data.knowledge_base_documents;
+
+    if (!Array.isArray(data)) {
+      console.error('Invalid data format:', data);
+      return [];
+    }
+
+    const mappedData: UserDocument[] = data.map((doc: UserDocumentModel) => ({
       id: doc.id,
       title: doc.title,
       tagPath: doc.tag_path,
       createdAt: doc.created_at,
       updatedAt: doc.updated_at,
-      createdBy: doc.created_by,
-      lastModifiedBy: doc.last_modified_by,
-      contents: doc.contents.map((content: UserDocumentContentModel) => ({
-        languageCode: content.language_code,
-        content: content.content,
-        createdAt: content.created_at,
-        updatedAt: content.updated_at
-      }))
+      createdBy: doc.created_by || null,
+      lastModifiedBy: doc.last_modified_by || null,
+      documentContents:
+        doc.document_contents.length > 0
+          ? doc.document_contents.map(content => ({
+              id: content.id,
+              languageCode: content.language_code,
+              content: content.content,
+              createdAt: content.created_at,
+              updatedAt: content.updated_at
+            }))
+          : []
     }));
 
-    return documents;
+    return mappedData;
   } catch (error) {
     console.error('Error getting documents:', error);
     return [];

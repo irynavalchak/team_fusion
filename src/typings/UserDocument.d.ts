@@ -1,10 +1,10 @@
 interface UserDocument {
-  id: string;
+  id: number;
   title: string;
   tagPath: string;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  lastModifiedBy: string;
-  contents: UserDocumentContent[];
+  createdAt: string | null;
+  updatedAt: string | null;
+  createdBy: number | null;
+  lastModifiedBy: number | null;
+  documentContents: UserDocumentContent[];
 }

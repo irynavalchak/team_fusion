@@ -1,4 +1,5 @@
 interface UserDocumentContentModel {
+  id: number;
   language_code: string;
   content: string;
   created_at: string;
