@@ -99,7 +99,8 @@ export default function LandManager({initialStructure}: LandManagerProps) {
   return (
     <ManagerWrapper
       selectedItem={selectedFolder}
-      fileContent={fileContent}
+      selectedContent={fileContent}
+      selectedLanguage="en"
       isEditing={isEditing}
       onEdit={() => setIsEditing(true)}
       onSave={handleSave}
