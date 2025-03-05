@@ -1,33 +1,32 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
-import { useRouter, usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import {useSession} from 'next-auth/react';
+import {useRouter, usePathname} from 'next/navigation';
+import {useEffect, useState} from 'react';
 
-export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  const { data: session, status } = useSession();
+export default function ProtectedLayout({children}: {children: React.ReactNode}) {
+  const {status} = useSession(); // Удалил session, так как она не используется
   const router = useRouter();
   const pathname = usePathname();
   const [isPublicDocument, setIsPublicDocument] = useState<boolean | null>(null);
+  const [redirectAttempted, setRedirectAttempted] = useState(false);
 
+  // Проверяем URL параметры (должен выполняться всегда, без условий!)
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const searchParams = new URLSearchParams(window.location.search);
       const id = searchParams.get('id');
       const contentId = searchParams.get('contentId');
 
-      // Если это публичная ссылка, сохраняем флаг
-      if (pathname === '/documents' && id && contentId) {
-        setIsPublicDocument(true);
-      } else {
-        setIsPublicDocument(false);
-      }
+      setIsPublicDocument(pathname === '/documents' && id && contentId ? true : false);
     }
   }, [pathname]);
 
   // Показываем заглушку, пока идет проверка (чтобы избежать разницы в SSR и CSR)
   if (isPublicDocument === null) {
-    return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Загрузка...</div>;
+    return (
+      <div style={{height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>Загрузка...</div>
+    );
   }
 
   // Если это публичная ссылка, рендерим контент без авторизации
@@ -35,8 +34,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
     return <>{children}</>;
   }
 
-  const [redirectAttempted, setRedirectAttempted] = useState(false);
-
+  // Обрабатываем редирект для неавторизованных пользователей
   useEffect(() => {
     if (status === 'loading') return;
 
@@ -55,7 +53,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
 
   if (status === 'loading') {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+      <div className="d-flex justify-content-center align-items-center" style={{height: '100vh'}}>
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Загрузка...</span>
         </div>
@@ -65,7 +63,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
 
   if (status === 'unauthenticated' && redirectAttempted) {
     return (
-      <div className="d-flex flex-column justify-content-center align-items-center" style={{ height: '100vh' }}>
+      <div className="d-flex flex-column justify-content-center align-items-center" style={{height: '100vh'}}>
         <div className="mb-3">Произошла ошибка при авторизации</div>
         <button
           className="btn btn-primary"
@@ -81,7 +79,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
 
   if (status === 'unauthenticated' && !pathname.includes('/api/auth')) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+      <div className="d-flex justify-content-center align-items-center" style={{height: '100vh'}}>
         <div>Перенаправление на страницу авторизации...</div>
       </div>
     );
