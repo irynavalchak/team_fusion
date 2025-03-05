@@ -7,10 +7,9 @@ import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'components/ui/di
 
 import styles from './TaskPopup.module.css';
 
-interface TaskPopupProps {
+interface Props {
   isOpen: boolean;
   onClose: () => void;
-  missionId: string | null;
   taskId: string | null;
   taskTitle: string;
   taskDescription: string;
@@ -19,10 +18,9 @@ interface TaskPopupProps {
   onSave: () => void;
 }
 
-const TaskPopup: React.FC<TaskPopupProps> = ({
+const TaskPopup: React.FC<Props> = ({
   isOpen,
   onClose,
-  missionId,
   taskId,
   taskTitle,
   taskDescription,

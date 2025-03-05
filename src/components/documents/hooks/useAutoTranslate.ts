@@ -3,6 +3,7 @@ import axios from 'axios';
 import {toast} from 'react-toastify';
 
 import {useAppDispatch} from 'redux_state/hooks';
+import {AppDispatch} from 'redux_state/store';
 import {addNewDocumentContent, updateDocumentContent} from 'redux_state/reducers/documentsSlice';
 
 import LANGUAGE from 'constants/language';
@@ -73,7 +74,7 @@ export const translateAndSaveAllLanguages = async (
   documentId: number,
   sourceLang: string,
   updatedContent: string,
-  dispatch: any
+  dispatch: AppDispatch
 ) => {
   const targetLanguages = REQUIRED_LANGUAGES.filter(lang => lang !== sourceLang);
 

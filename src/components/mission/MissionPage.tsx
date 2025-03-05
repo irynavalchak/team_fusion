@@ -184,7 +184,6 @@ const MissionPage: React.FC<MissionPageProps> = ({projectId, missionId}) => {
       <TaskPopup
         isOpen={isTaskModalOpen}
         onClose={closeTaskModal}
-        missionId={missionId}
         taskId={selectedTaskId}
         taskTitle={taskTitle}
         taskDescription={taskDescription}
