@@ -56,9 +56,18 @@ function isPublicPath(path: string) {
 // Основная функция middleware
 export default async function middleware(request: NextRequestWithAuth, event: NextFetchEvent) {
   const pathname = request.nextUrl.pathname;
+  const searchParams = new URLSearchParams(request.nextUrl.search);
 
   // Разрешаем доступ к публичным путям без проверки авторизации
   if (isPublicPath(pathname)) {
+    return NextResponse.next();
+  }
+
+  // Проверяем, является ли страница публичным документом
+  const isPublicDocument = pathname.startsWith('/documents') && searchParams.has('id') && searchParams.has('contentId');
+
+  // Если это публичная ссылка - пропускаем без авторизации
+  if (isPublicDocument) {
     return NextResponse.next();
   }
 
