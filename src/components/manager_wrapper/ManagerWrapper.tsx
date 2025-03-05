@@ -1,9 +1,9 @@
-'use client';
-
 import {ReactNode} from 'react';
 import {usePathname} from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+
+import LANGUAGE from 'constants/language';
 
 import {Button} from 'components/ui/button';
 import {ScrollArea} from 'components/ui/scroll-area';
@@ -94,7 +94,7 @@ function ManagerWrapper({
                   <div className={styles.buttonContainer}>
                     {!isEditing ? (
                       <>
-                        {pathName === '/documents' && selectedLanguage !== 'en' && (
+                        {pathName === '/documents' && selectedLanguage !== LANGUAGE.EN && (
                           <button className={styles.buttonDelete} onClick={handleDeleteDocumentContent}>
                             Delete
                           </button>

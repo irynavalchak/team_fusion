@@ -15,13 +15,15 @@ import {
   deleteDocumentContent
 } from 'redux_state/reducers/documentsSlice';
 
-import {buildTree} from '../../utils/buildTree';
-import {documentPath} from '../../utils/documentPath';
-import {encryptId, decryptId} from '../../utils/encryption';
+import {buildTree} from 'utils/buildTree';
+import {documentPath} from 'utils/documentPath';
+import {encryptId, decryptId} from 'utils/encryption';
 
 import useLoadingDocuments from './hooks/useLoadingDocuments';
 import useAutoTranslate, {translateAndSaveAllLanguages} from './hooks/useAutoTranslate';
 import useLoadDocumentFromUrl from './hooks/useLoadDocumentFromUrl';
+
+import LANGUAGE from 'constants/language';
 
 import ManagerWrapper from 'components/manager_wrapper/ManagerWrapper';
 import NewDocumentPopup from './components/NewDocumentPopup/NewDocumentPopup';
@@ -42,7 +44,7 @@ const DocumentsPage: React.FC = () => {
     : (encryptedDocumentIdFromUrl && parseInt(encryptedDocumentIdFromUrl, 10)) || null;
 
   const [selectedDocument, setSelectedDocument] = useState<UserDocument | null>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(LANGUAGE.EN);
   const [selectedContent, setSelectedContent] = useState<string>('');
   const [selectedContentId, setSelectedContentId] = useState<number | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -102,10 +104,10 @@ const DocumentsPage: React.FC = () => {
   const handleDocumentSelect = (document: UserDocument) => {
     setSelectedDocument(document);
     setActiveItem(document.id);
-    setSelectedLanguage('en');
+    setSelectedLanguage(LANGUAGE.EN);
 
-    // Знаходимо контент для мови 'en'
-    const englishContent = document.documentContents.find(c => c.languageCode === 'en');
+    const englishContent = document.documentContents.find(c => c.languageCode === LANGUAGE.EN);
+
     if (englishContent) {
       setSelectedContentId(englishContent.id);
       router.push(`/documents?id=${document.id}&contentId=${englishContent.id}`);

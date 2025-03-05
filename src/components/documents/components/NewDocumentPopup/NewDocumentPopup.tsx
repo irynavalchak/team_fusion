@@ -2,12 +2,13 @@
 
 import React, {useState} from 'react';
 
+import LANGUAGE from 'constants/language';
+
 import {Button} from 'components/ui/button';
 import {Input} from 'components/ui/input';
 import {Textarea} from 'components/ui/textarea';
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'components/ui/dialog';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from 'components/ui/select';
-
 import Loader from 'components/common/Loader/Loader';
 
 import styles from './NewDocumentPopup.module.css';
@@ -31,7 +32,7 @@ const NewDocumentPopup: React.FC<NewDocumentPopupProps> = ({
 }) => {
   const [title, setTitle] = useState('');
   const [tagPath, setTagPath] = useState('');
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(LANGUAGE.EN);
   const [content, setContent] = useState('');
 
   return (
