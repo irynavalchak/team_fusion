@@ -8,9 +8,7 @@
 
 .leftPanel {
   flex: 1;
-  border: 2px solid #0051a2;
   border-radius: 8px;
-  padding: 20px;
   min-width: 0;
   background: #ffffff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -22,7 +20,7 @@
 
 .rightPanel {
   height: fit-content;
-  border: 2px solid #d32f2f;
+  border: 1px solid #d32f2f;
   border-radius: 8px;
   padding: 20px;
   width: 300px;
@@ -75,9 +73,7 @@
 }
 
 .section {
-  border: 3px solid #444;
-  border-radius: 3px;
-  margin-bottom: 12px;
+  border-radius: 8px;
   background: #ffffff;
   display: flex;
   flex-direction: column;
@@ -92,6 +88,7 @@
   font-size: 30px;
   font-weight: bold;
   color: #444;
+  padding-top: 10px;
 }
 
 .sectionHeader {
@@ -101,7 +98,6 @@
   padding: 14px;
   background: #e3f2fd;
   font-weight: 500;
-  border-bottom: 3px solid #444;
 }
 
 .title {
@@ -137,6 +133,7 @@
   flex-direction: column;
   overflow: auto;
   transition: all 0.3s ease;
+  border-radius: 8px;
 }
 
 .editingContent {
