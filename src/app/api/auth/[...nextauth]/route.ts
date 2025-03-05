@@ -37,17 +37,12 @@ const handler = NextAuth({
   callbacks: {
     async signIn({user, account}) {
       try {
-        console.log('SignIn callback начал работу');
-        console.log('User:', user);
-        console.log('Account:', account);
-
         if (!account?.providerAccountId) {
           console.error('No provider account ID');
           throw new Error('No provider account ID');
         }
 
         // Проверяем существование пользователя
-        console.log(`Проверяем пользователя с Discord ID: ${account.providerAccountId}`);
         const checkUserResponse = await axios.post(
           `${API_BASE_URL}/api/rest/get_user_by_discord_id`,
           {
@@ -61,11 +56,8 @@ const handler = NextAuth({
           }
         );
 
-        console.log('Ответ API о пользователе:', checkUserResponse.data);
-
         // Если пользователь не найден, создаем нового
         if (!checkUserResponse.data.users.length) {
-          console.log(`Создаем нового пользователя для Discord ID: ${account.providerAccountId}`);
           // 1. Создаём пользователя
           const createUserResponse = await axios.post(
             `${API_BASE_URL}/api/rest/user`,
@@ -84,7 +76,6 @@ const handler = NextAuth({
           );
 
           const newUserId = createUserResponse?.data?.insert_users_one?.id;
-          console.log('Создан новый пользователь с ID:', newUserId);
 
           // 2. Добавляем роль пользователю
           await axios.post(
@@ -100,10 +91,8 @@ const handler = NextAuth({
               }
             }
           );
-          console.log('Роль успешно добавлена пользователю.');
         }
 
-        console.log('SignIn callback успешно завершен');
         return true;
       } catch (error) {
         console.error('Ошибка в signIn callback:', error);
@@ -113,9 +102,6 @@ const handler = NextAuth({
 
     async session({session, token}) {
       try {
-        console.log('Session callback начал работу');
-        console.log('Token:', token);
-
         const response = await axios.post(
           `${API_BASE_URL}/api/rest/get_user_by_discord_id`,
           {
@@ -130,7 +116,6 @@ const handler = NextAuth({
         );
 
         const userData = response.data.users[0];
-        console.log('Данные пользователя из БД:', userData);
 
         if (userData) {
           const enhancedSession = {
@@ -144,11 +129,9 @@ const handler = NextAuth({
             }
           };
 
-          console.log('Обновленная сессия:', enhancedSession);
           return enhancedSession;
         }
 
-        console.log('Пользователь не найден в БД, возвращаем гостевую роль');
         return {
           ...session,
           user: {
@@ -163,9 +146,7 @@ const handler = NextAuth({
     },
 
     async jwt({token, account}) {
-      console.log('JWT callback вызван');
       if (account) {
-        console.log('Добавляем discord_id в токен:', account.providerAccountId);
         token.discord_id = account.providerAccountId;
       }
       return token;
@@ -173,17 +154,10 @@ const handler = NextAuth({
 
     // Автоматическое перенаправление после входа
     async redirect({url, baseUrl}) {
-      console.log('Redirect callback вызван');
-      console.log('URL:', url);
-      console.log('Base URL:', baseUrl);
-
       // Пытаемся использовать предоставленный URL, если он безопасен
-      if (url.startsWith(baseUrl)) {
-        console.log(`Перенаправляем на: ${url}`);
-        return url;
-      }
+      if (url.startsWith(baseUrl)) return url;
+
       // Иначе перенаправляем на главную
-      console.log(`Перенаправляем на базовый URL: ${baseUrl}`);
       return baseUrl;
     }
   }

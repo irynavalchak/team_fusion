@@ -20,7 +20,7 @@ import {documentPath} from '../../utils/documentPath';
 import {encryptId, decryptId} from '../../utils/encryption';
 
 import useLoadingDocuments from './hooks/useLoadingDocuments';
-import useAutoTranslate from './hooks/useAutoTranslate';
+import useAutoTranslate, {translateAndSaveAllLanguages} from './hooks/useAutoTranslate';
 import useLoadDocumentFromUrl from './hooks/useLoadDocumentFromUrl';
 
 import ManagerWrapper from 'components/manager_wrapper/ManagerWrapper';
@@ -46,6 +46,7 @@ const DocumentsPage: React.FC = () => {
   const [selectedContent, setSelectedContent] = useState<string>('');
   const [selectedContentId, setSelectedContentId] = useState<number | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const [activeItem, setActiveItem] = useState<number | null>(documentIdFromUrl);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isCreatingDocument, setIsCreatingDocument] = useState(false);
@@ -164,24 +165,36 @@ const DocumentsPage: React.FC = () => {
 
   const handleSave = async () => {
     if (!selectedDocument) return;
+
     try {
-      const response = await axios.put('/api/documents/update_document_content', {
+      setIsSaving(true);
+
+      // Обновляем основной язык
+      await axios.put('/api/documents/update_document_content', {
         document_id: selectedDocument.id,
         language_code: selectedLanguage,
         content: selectedContent
       });
-      if (response.status === 200) {
-        dispatch(
-          updateDocumentContent({
-            documentId: selectedDocument.id,
-            languageCode: selectedLanguage,
-            content: selectedContent
-          })
-        );
-        setIsEditing(false);
-      }
+
+      dispatch(
+        updateDocumentContent({
+          documentId: selectedDocument.id,
+          languageCode: selectedLanguage,
+          content: selectedContent
+        })
+      );
+
+      // Перевод и обновление других языков
+      await translateAndSaveAllLanguages(selectedDocument.id, selectedLanguage, selectedContent, dispatch);
+
+      setIsEditing(false);
+      setIsSaving(false);
+      toast.success('Document updated and translated successfully!');
     } catch (error) {
       console.error('Error updating document content:', error);
+      toast.error('Failed to update document.');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -245,6 +258,7 @@ const DocumentsPage: React.FC = () => {
       isEditing={isEditing}
       onEdit={() => setIsEditing(true)}
       onSave={handleSave}
+      isSaving={isSaving}
       onCancel={() => setIsEditing(false)}
       onContentChange={setSelectedContent}
       title="Documents"

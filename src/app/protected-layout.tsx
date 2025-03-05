@@ -40,7 +40,7 @@ export default function ProtectedLayout({children}: {children: React.ReactNode})
   // ❗ Вместо раннего return, рендерим заглушку, но useEffect всегда вызывается
   if (isPublicDocument === null) {
     return (
-      <div style={{height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>Загрузка...</div>
+      <div style={{height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>Loading...</div>
     );
   }
 
@@ -50,7 +50,7 @@ export default function ProtectedLayout({children}: {children: React.ReactNode})
   ) : status === 'loading' ? (
     <div className="d-flex justify-content-center align-items-center" style={{height: '100vh'}}>
       <div className="spinner-border" role="status">
-        <span className="visually-hidden">Загрузка...</span>
+        <span className="visually-hidden">Loading...</span>
       </div>
     </div>
   ) : status === 'unauthenticated' && redirectAttempted ? (

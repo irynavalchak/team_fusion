@@ -17,7 +17,6 @@ export async function POST(request: Request) {
     await fs.writeFile(fullPath, content);
     return NextResponse.json({success: true});
   } catch (error) {
-    console.log('POST request for save_md error:', error);
     return NextResponse.json({error: 'Failed to save file'}, {status: 500});
   }
 }

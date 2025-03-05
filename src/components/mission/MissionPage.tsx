@@ -2,13 +2,13 @@
 
 import React, {useState, useEffect} from 'react';
 import {useRouter} from 'next/navigation';
+import {Plus, ArrowLeft} from 'lucide-react';
+import {DragDropContext, Droppable, DropResult} from '@hello-pangea/dnd';
 
 import {useAppSelector, useAppDispatch} from 'redux_state/hooks';
 import {deleteTask} from 'redux_state/reducers/projectsSlice';
 
-import {DragDropContext, Droppable, DropResult} from '@hello-pangea/dnd';
 import {Card, CardContent, CardHeader, CardTitle} from 'components/ui/card';
-import {Plus, ArrowLeft} from 'lucide-react';
 
 import useLoadingMission from './hooks/useLoadingMission';
 import TaskPopup from './components/TaskPopup/TaskPopup';
@@ -30,7 +30,7 @@ const MissionPage: React.FC<MissionPageProps> = ({projectId, missionId}) => {
   const selectedMission = useAppSelector(state => state.projects.selectedMission);
 
   const [tasks, setTasks] = useState<Task[]>([]);
-  console.log(' tasks:', tasks);
+
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [taskTitle, setTaskTitle] = useState('');

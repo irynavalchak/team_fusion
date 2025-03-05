@@ -21,6 +21,7 @@ export default function LandManager({initialStructure}: LandManagerProps) {
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState<string>('');
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const [images, setImages] = useState<string[]>([]);
 
   useEffect(() => {
@@ -53,6 +54,8 @@ export default function LandManager({initialStructure}: LandManagerProps) {
     if (!selectedFolder) return;
 
     try {
+      setIsSaving(true);
+
       const response = await axios.post('/api/save_file_md', {
         path: `${selectedFolder}/content.md`,
         content: fileContent,
@@ -61,9 +64,12 @@ export default function LandManager({initialStructure}: LandManagerProps) {
 
       if (response.status === 200) {
         setIsEditing(false);
+        setIsSaving(false);
       }
     } catch (error) {
       console.error('Error saving file:', error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -104,6 +110,7 @@ export default function LandManager({initialStructure}: LandManagerProps) {
       isEditing={isEditing}
       onEdit={() => setIsEditing(true)}
       onSave={handleSave}
+      isSaving={isSaving}
       onCancel={() => setIsEditing(false)}
       onContentChange={setFileContent}
       title="Land"

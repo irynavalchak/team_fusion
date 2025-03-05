@@ -2,7 +2,6 @@
 
 import {ReactNode} from 'react';
 import {usePathname} from 'next/navigation';
-
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -11,11 +10,11 @@ import {ScrollArea} from 'components/ui/scroll-area';
 import {Textarea} from 'components/ui/textarea';
 
 import ImageCarousel from 'components/land/components/image_carousel/ImageCarousel';
-import Confirmation from '../common/Confirmation/Confirmation';
+import Confirmation from 'components/common/Confirmation/Confirmation';
 
 import styles from './ManagerWrapper.module.css';
 
-interface ManagerWrapperProps {
+interface Props {
   children: ReactNode;
   selectedItem: string | null;
   selectedLanguage: string;
@@ -23,6 +22,7 @@ interface ManagerWrapperProps {
   isEditing: boolean;
   onEdit: () => void;
   onSave: () => void;
+  isSaving: boolean;
   onCancel: () => void;
   onContentChange: (content: string) => void;
   title: string;
@@ -36,7 +36,7 @@ interface ManagerWrapperProps {
   handleDeleteDocumentContent?: () => void;
 }
 
-export default function ManagerWrapper({
+function ManagerWrapper({
   children,
   selectedItem,
   selectedLanguage,
@@ -44,6 +44,7 @@ export default function ManagerWrapper({
   isEditing,
   onEdit,
   onSave,
+  isSaving,
   onCancel,
   onContentChange,
   title,
@@ -55,7 +56,7 @@ export default function ManagerWrapper({
   onDelete,
   isConfirmationOpen,
   handleDeleteDocumentContent
-}: ManagerWrapperProps) {
+}: Props) {
   const pathName = usePathname();
   return (
     <div className={styles.container}>
@@ -104,11 +105,11 @@ export default function ManagerWrapper({
                       </>
                     ) : (
                       <>
-                        <Button className={styles.button} onClick={onSave}>
-                          Save Changes
-                        </Button>
-                        <Button className={styles.button} onClick={onCancel}>
+                        <Button variant="outline" className={styles.button} onClick={onCancel}>
                           Cancel
+                        </Button>
+                        <Button className={styles.button} disabled={isSaving} onClick={onSave}>
+                          Save Changes
                         </Button>
                       </>
                     )}
@@ -136,3 +137,5 @@ export default function ManagerWrapper({
     </div>
   );
 }
+
+export default ManagerWrapper;

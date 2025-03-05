@@ -10,7 +10,7 @@ export default function HomePage() {
     return (
       <div className="container d-flex justify-content-center">
         <div className="spinner-border mt-5" role="status">
-          <span className="visually-hidden">Загрузка...</span>
+          <span className="visually-hidden">Loading...</span>
         </div>
       </div>
     );
