@@ -28,7 +28,8 @@ const AuthButton: FC = () => {
             )}
           </div>
         }
-        id="nav-dropdown">
+        id="nav-dropdown"
+        className={styles.authDropdown}>
         <NavDropdown.Item disabled>{session.user?.email}</NavDropdown.Item>
         <NavDropdown.Divider />
         <NavDropdown.Item onClick={() => signOut()}>Sign out</NavDropdown.Item>

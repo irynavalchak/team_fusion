@@ -1,3 +1,13 @@
 .userName {
     color: #fff;
 }
+
+/* Hide the dropdown arrow */
+.authDropdown :global(.dropdown-toggle::after) {
+    display: none;
+}
+
+/* Ensure the dropdown still works by making the entire area clickable */
+.authDropdown :global(.dropdown-toggle) {
+    cursor: pointer;
+}
