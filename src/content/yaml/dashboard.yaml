@@ -1,0 +1,47 @@
+en:
+  title: "Welcome to TeamFusion"
+  toggleLabel: "Show Experimental Features"
+  navigation:
+    documents: "Documents"
+  featureFlags:
+    aiAssistant: "AI Assistant"
+    financeModule: "Finance Module"
+    projectManagement: "Project Management"
+    landModule: "Land Module"
+  languageSwitcher:
+    title: "Change Language"
+    english: "English"
+    russian: "Russian"
+    thai: "Thai"
+
+ru:
+  title: "Добро пожаловать в TeamFusion"
+  toggleLabel: "Показать экспериментальные функции"
+  navigation:
+    documents: "Документы"
+  featureFlags:
+    aiAssistant: "ИИ Ассистент"
+    financeModule: "Финансовый модуль"
+    projectManagement: "Управление проектами"
+    landModule: "Земельный модуль"
+  languageSwitcher:
+    title: "Изменить язык"
+    english: "Английский"
+    russian: "Русский"
+    thai: "Тайский"
+
+th:
+  title: "ยินดีต้อนรับสู่ TeamFusion"
+  toggleLabel: "แสดงคุณสมบัติทดลอง"
+  navigation:
+    documents: "เอกสาร"
+  featureFlags:
+    aiAssistant: "ผู้ช่วย AI"
+    financeModule: "โมดูลการเงิน"
+    projectManagement: "การจัดการโครงการ"
+    landModule: "โมดูลที่ดิน"
+  languageSwitcher:
+    title: "เปลี่ยนภาษา"
+    english: "อังกฤษ"
+    russian: "รัสเซีย"
+    thai: "ไทย" 
