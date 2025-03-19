@@ -1,0 +1,35 @@
+en:
+  title: "Settings"
+  backToDashboard: "Back to Dashboard"
+  features:
+    title: "Feature Settings"
+    toggleLabel: "Show Experimental Features"
+  language:
+    title: "Language Settings"
+    english: "English"
+    russian: "Russian"
+    thai: "Thai"
+
+ru:
+  title: "Настройки"
+  backToDashboard: "Вернуться на Панель управления"
+  features:
+    title: "Настройки функций"
+    toggleLabel: "Показать экспериментальные функции"
+  language:
+    title: "Настройки языка"
+    english: "Английский"
+    russian: "Русский"
+    thai: "Тайский"
+
+th:
+  title: "การตั้งค่า"
+  backToDashboard: "กลับไปที่แดชบอร์ด"
+  features:
+    title: "การตั้งค่าคุณสมบัติ"
+    toggleLabel: "แสดงคุณสมบัติทดลอง"
+  language:
+    title: "การตั้งค่าภาษา"
+    english: "อังกฤษ"
+    russian: "รัสเซีย"
+    thai: "ไทย" 

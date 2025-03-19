@@ -24,9 +24,6 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
   return (
     <div className="language-switcher">
-      <p className="language-title">
-        {translations?.languageSwitcher?.title || 'Change Language'}
-      </p>
       <div className="language-buttons">
         {SUPPORTED_LANGUAGES.map((language) => (
           <button
@@ -50,16 +47,9 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
       <style jsx>{`
         .language-switcher {
-          margin-top: 1rem;
           display: flex;
           flex-direction: column;
           align-items: center;
-        }
-        
-        .language-title {
-          font-size: 0.9rem;
-          color: #666;
-          margin-bottom: 0.5rem;
         }
         
         .language-buttons {

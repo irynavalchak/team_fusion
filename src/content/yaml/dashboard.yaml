@@ -3,6 +3,7 @@ en:
   toggleLabel: "Show Experimental Features"
   navigation:
     documents: "Documents"
+    settings: "Settings"
   featureFlags:
     aiAssistant: "AI Assistant"
     financeModule: "Finance Module"
@@ -13,12 +14,20 @@ en:
     english: "English"
     russian: "Russian"
     thai: "Thai"
+  settings:
+    title: "Settings"
+    backToDashboard: "Back to Dashboard"
+    features:
+      title: "Feature Settings"
+    language:
+      title: "Language Settings"
 
 ru:
   title: "Добро пожаловать в TeamFusion"
   toggleLabel: "Показать экспериментальные функции"
   navigation:
     documents: "Документы"
+    settings: "Настройки"
   featureFlags:
     aiAssistant: "ИИ Ассистент"
     financeModule: "Финансовый модуль"
@@ -29,12 +38,20 @@ ru:
     english: "Английский"
     russian: "Русский"
     thai: "Тайский"
+  settings:
+    title: "Настройки"
+    backToDashboard: "Вернуться на Панель управления"
+    features:
+      title: "Настройки функций"
+    language:
+      title: "Настройки языка"
 
 th:
   title: "ยินดีต้อนรับสู่ TeamFusion"
   toggleLabel: "แสดงคุณสมบัติทดลอง"
   navigation:
     documents: "เอกสาร"
+    settings: "การตั้งค่า"
   featureFlags:
     aiAssistant: "ผู้ช่วย AI"
     financeModule: "โมดูลการเงิน"
@@ -44,4 +61,11 @@ th:
     title: "เปลี่ยนภาษา"
     english: "อังกฤษ"
     russian: "รัสเซีย"
-    thai: "ไทย" 
+    thai: "ไทย"
+  settings:
+    title: "การตั้งค่า"
+    backToDashboard: "กลับไปที่แดชบอร์ด"
+    features:
+      title: "การตั้งค่าคุณสมบัติ"
+    language:
+      title: "การตั้งค่าภาษา" 

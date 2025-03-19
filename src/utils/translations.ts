@@ -14,49 +14,37 @@ export const SUPPORTED_LANGUAGES = [
 // Define the default language
 export const DEFAULT_LANGUAGE = LANGUAGE.EN;
 
-// Cache for loaded translations
-let translationsCache: Record<string, any> = {};
+// Cache for translations
+const translationCache: Record<string, any> = {};
 
 /**
- * Load translations for a specific language
+ * Load translations for a specific language and module
+ * @param lang - Language code (e.g., 'en', 'ru', 'th')
+ * @param module - Module name (e.g., 'dashboard', 'settings')
+ * @returns Promise with translations object
  */
-export async function loadTranslations(lang: string): Promise<any> {
-  // Check if translations are already in cache
-  if (translationsCache[lang]) {
-    return translationsCache[lang];
+export async function loadTranslations(lang: string, module: string = 'dashboard'): Promise<any> {
+  // Check cache first
+  const cacheKey = `${lang}-${module}`;
+  if (translationCache[cacheKey]) {
+    return translationCache[cacheKey];
   }
 
   try {
-    // Load the YAML file for the dashboard module
-    const response = await fetch(`/api/translations?module=dashboard`);
+    const response = await fetch(`/api/translations?module=${module}`);
     if (!response.ok) {
-      console.error(`Failed to load translations for module dashboard`);
-      return {};
+      throw new Error(`Failed to load translations for module ${module}`);
     }
-
-    const data = await response.text();
-    const parsedData = parse(data);
     
-    // Get translations for the requested language
-    const translations = parsedData[lang];
-    if (!translations) {
-      console.error(`Translations not found for language ${lang}`);
-      // Fall back to default language if specified language is not found
-      if (lang !== DEFAULT_LANGUAGE) {
-        return loadTranslations(DEFAULT_LANGUAGE);
-      }
-      return {};
-    }
+    const yaml = await response.text();
+    const translations = parse(yaml);
     
     // Cache the translations
-    translationsCache[lang] = translations;
-    return translations;
+    translationCache[cacheKey] = translations[lang];
+    
+    return translations[lang];
   } catch (error) {
-    console.error(`Error loading translations:`, error);
-    // Fall back to default language if specified language fails to load
-    if (lang !== DEFAULT_LANGUAGE) {
-      return loadTranslations(DEFAULT_LANGUAGE);
-    }
+    console.error(`Error loading translations for module ${module}:`, error);
     return {};
   }
 }

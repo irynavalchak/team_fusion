@@ -12,7 +12,6 @@ import {
 } from 'lucide-react';
 
 import styles from './page.module.css';
-import LanguageSwitcher from '@/components/common/LanguageSwitcher';
 import { 
   loadTranslations, 
   getTranslation, 
@@ -31,7 +30,8 @@ const featureFlaggedItems = [
 
 // Regular navigation items
 const navigationItems = [
-  { href: '/documents', icon: FileText, label: 'navigation.documents' }
+  { href: '/documents', icon: FileText, label: 'navigation.documents' },
+  { href: '/settings', icon: Settings, label: 'navigation.settings' }
 ];
 
 export default function DashboardPage() {
@@ -74,24 +74,6 @@ export default function DashboardPage() {
     initializeLanguage();
   }, []);
 
-  // Handle language change
-  const handleLanguageChange = async (lang: string) => {
-    setIsLoading(true);
-    setCurrentLanguage(lang);
-    
-    // Load translations for the new language
-    const loadedTranslations = await loadTranslations(lang);
-    setTranslations(loadedTranslations);
-    
-    setIsLoading(false);
-  };
-  
-  // Save toggle state to local storage when changed
-  const handleToggleChange = (newValue: boolean) => {
-    setShowExperimentalFeatures(newValue);
-    localStorage.setItem('showExperimentalFeatures', newValue.toString());
-  };
-
   // Helper function to get translated text
   const t = (key: string): string => {
     return getTranslation(translations, key) || key;
@@ -109,21 +91,6 @@ export default function DashboardPage() {
   return (
     <main className={styles.container}>
       <h1 className={styles.title}>{t('title')}</h1>
-      
-      {/* Toggle for experimental features */}
-      <div className={styles.toggleContainer}>
-        <label htmlFor="feature-toggle" className={styles.toggleLabel}>
-          {t('toggleLabel')}
-          <input
-            id="feature-toggle"
-            type="checkbox"
-            checked={showExperimentalFeatures}
-            onChange={(e) => handleToggleChange(e.target.checked)}
-            className={styles.toggleInput}
-          />
-          <span className={styles.toggleSwitch}></span>
-        </label>
-      </div>
       
       <section 
         className={styles.grid}
@@ -155,13 +122,6 @@ export default function DashboardPage() {
           </Link>
         ))}
       </section>
-      
-      {/* Language switcher */}
-      <LanguageSwitcher 
-        currentLanguage={currentLanguage}
-        onChange={handleLanguageChange}
-        translations={translations}
-      />
     </main>
   );
 }
