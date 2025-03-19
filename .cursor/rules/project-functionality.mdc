@@ -1,0 +1,54 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+## Intro
+
+**TeamFusion** is an AI-powered platform designed to help teams collaborate more effectively on business projects. It leverages artificial intelligence to elevate organizational processes to a new level of synergy, offering supercharged capabilities in critical areas such as:
+
+- Project Management
+- Financial Transaction Tracking
+- Knowledge Base Management
+- Document Handling (Drafts)
+
+By integrating AI into everyday business operations, TeamFusion streamlines workflows and empowers teams to focus on creativity and decision-making, while routine processes are optimized and automated.
+
+---
+
+## Current Functionality
+
+The current version of **TeamFusion** includes the following components:
+
+- **TeamFusion App**: Web application providing access to platform features.
+- **Database**: PostgreSQL used as the main data storage.
+- **Hasura**: Generates REST APIs over the database.
+- **Git Repository**: Stores the knowledge base in Markdown format, as well as non-text document files and images.
+- **Discord Integration**: Used as the primary company messenger.
+- **SSO Authentication**: Single Sign-On for secure dashboard access.
+
+### Available Features:
+- **Drafts Module**:
+  - Create and store documents in Markdown format in the database.
+  - Tag documents with document paths for easy navigation.
+  - Translate documents into multiple languages.
+  - Share documents as public links.
+  - Copy text content to clipboard for quick usage.
+
+---
+
+## Next (Roadmap for Future)
+
+The next planned modules to be integrated into **TeamFusion**:
+
+1. **Project Management Module**:
+   - Task creation and assignment.
+   - Project timelines and milestones.
+   - Integration with AI for task prioritization and progress tracking.
+
+2. **Finance Module**:
+   - Tracking of financial transactions.
+   - Budgeting and expense management.
+   - Automated financial reporting with AI assistance.
+
