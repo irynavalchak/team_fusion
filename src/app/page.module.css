@@ -1,0 +1,181 @@
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 56px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #222;
+}
+
+/* Toggle styles for dummy items */
+.toggleContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.toggleLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 500;
+  color: #333;
+}
+
+.toggleInput {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.toggleSwitch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+  background-color: #ccc;
+  border-radius: 12px;
+  transition: background-color 0.2s;
+}
+
+.toggleSwitch::before {
+  content: "";
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.toggleInput:checked + .toggleSwitch {
+  background-color: #0057b8;
+}
+
+.toggleInput:checked + .toggleSwitch::before {
+  transform: translateX(24px);
+}
+
+.toggleInput:focus-visible + .toggleSwitch {
+  box-shadow: 0 0 0 2px rgba(0, 87, 184, 0.5);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  padding: 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Adjust grid for different screen sizes and number of items */
+@media (min-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1200px;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  text-decoration: none;
+  color: #222;
+  aspect-ratio: 1;
+  position: relative;
+  outline: none;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background-color: #f8f9ff;
+  border-color: #0057b8;
+}
+
+.card:focus-visible {
+  outline: 3px solid #0057b8;
+  outline-offset: 2px;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 1.5rem;
+  color: #0057b8;
+  transition: transform 0.2s ease;
+}
+
+.card:hover .icon {
+  transform: scale(1.1);
+}
+
+.label {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  color: #222;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.label::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #0057b8;
+  transition: width 0.2s ease, left 0.2s ease;
+}
+
+.card:hover .label::after {
+  width: 100%;
+  left: 0;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(1, 1fr);
+    max-width: 400px;
+  }
+  
+  .card {
+    aspect-ratio: 2/1;
+    padding: 2rem;
+  }
+  
+  .icon {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1199px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 700px;
+  }
+} 

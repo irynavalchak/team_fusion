@@ -1,0 +1,13 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Technical stack
+
+- TypeScript+JS for the backend
+- html/js + Next.js for the frontend
+- SQL databases, never JSON file storage
+- Separate databases for dev, test, and prod
+- Jest/Mocha for testing
+- md files for documentation
