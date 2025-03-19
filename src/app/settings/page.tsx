@@ -8,8 +8,10 @@ import {
   loadTranslations, 
   getTranslation, 
   getLanguageCookie, 
-  DEFAULT_LANGUAGE, 
-  isLanguageSupported 
+  DEFAULT_LANGUAGE,
+  TranslationObject,
+  isLanguageSupported,
+  setLanguageCookie
 } from '@/utils/translations';
 
 import styles from './settings.module.css';
@@ -18,7 +20,7 @@ export default function SettingsPage() {
   // State for feature flag toggle
   const [showExperimentalFeatures, setShowExperimentalFeatures] = useState(false);
   // State for translations
-  const [translations, setTranslations] = useState<any>({});
+  const [translations, setTranslations] = useState<TranslationObject>({});
   // State for current language
   const [currentLanguage, setCurrentLanguage] = useState(DEFAULT_LANGUAGE);
   // State for loading status

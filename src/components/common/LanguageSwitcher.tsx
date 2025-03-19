@@ -1,13 +1,14 @@
 import React from 'react';
 import { 
   SUPPORTED_LANGUAGES, 
-  setLanguageCookie 
+  setLanguageCookie,
+  TranslationObject
 } from '@/utils/translations';
 
 interface LanguageSwitcherProps {
   currentLanguage: string;
   onChange: (lang: string) => void;
-  translations: any;
+  translations: TranslationObject;
 }
 
 const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ 

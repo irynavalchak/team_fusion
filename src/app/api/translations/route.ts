@@ -4,9 +4,9 @@ import path from 'path';
 
 export async function GET(request: NextRequest) {
   // Get the requested module from the query parameter
-  const module = request.nextUrl.searchParams.get('module');
+  const translationModule = request.nextUrl.searchParams.get('module');
   
-  if (!module) {
+  if (!translationModule) {
     return NextResponse.json(
       { error: 'Module parameter is required' },
       { status: 400 }
@@ -15,12 +15,12 @@ export async function GET(request: NextRequest) {
   
   try {
     // Construct the file path for the requested module
-    const filePath = path.join(process.cwd(), 'src', 'content', 'yaml', `${module}.yaml`);
+    const filePath = path.join(process.cwd(), 'src', 'content', 'yaml', `${translationModule}.yaml`);
     
     // Check if the file exists
     if (!fs.existsSync(filePath)) {
       return NextResponse.json(
-        { error: `Translations for module '${module}' not found` },
+        { error: `Translations for module '${translationModule}' not found` },
         { status: 404 }
       );
     }
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error(`Error serving translations for module ${module}:`, error);
+    console.error(`Error serving translations for module ${translationModule}:`, error);
     return NextResponse.json(
       { error: 'Failed to load translations' },
       { status: 500 }

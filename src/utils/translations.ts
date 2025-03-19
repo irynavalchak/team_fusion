@@ -14,8 +14,22 @@ export const SUPPORTED_LANGUAGES = [
 // Define the default language
 export const DEFAULT_LANGUAGE = LANGUAGE.EN;
 
+// Define types for translations
+export interface LanguageSwitcherTranslations {
+  english?: string;
+  russian?: string;
+  thai?: string;
+  [key: string]: string | undefined;
+}
+
+export interface TranslationObject {
+  languageSwitcher?: LanguageSwitcherTranslations;
+  [key: string]: any;
+}
+type Translations = { [lang: string]: TranslationObject };
+
 // Cache for translations
-const translationCache: Record<string, any> = {};
+const translationCache: Record<string, TranslationObject> = {};
 
 /**
  * Load translations for a specific language and module
@@ -23,7 +37,7 @@ const translationCache: Record<string, any> = {};
  * @param module - Module name (e.g., 'dashboard', 'settings')
  * @returns Promise with translations object
  */
-export async function loadTranslations(lang: string, module: string = 'dashboard'): Promise<any> {
+export async function loadTranslations(lang: string, module: string = 'dashboard'): Promise<TranslationObject> {
   // Check cache first
   const cacheKey = `${lang}-${module}`;
   if (translationCache[cacheKey]) {
@@ -37,7 +51,7 @@ export async function loadTranslations(lang: string, module: string = 'dashboard
     }
     
     const yaml = await response.text();
-    const translations = parse(yaml);
+    const translations = parse(yaml) as Translations;
     
     // Cache the translations
     translationCache[cacheKey] = translations[lang];
@@ -53,9 +67,9 @@ export async function loadTranslations(lang: string, module: string = 'dashboard
  * Get a translation by key
  * Supports nested keys using dot notation, e.g., 'title'
  */
-export function getTranslation(translations: any, key: string): string {
+export function getTranslation(translations: TranslationObject, key: string): string {
   const keys = key.split('.');
-  let result = translations;
+  let result: any = translations;
   
   for (const k of keys) {
     if (result && typeof result === 'object' && k in result) {
@@ -66,7 +80,7 @@ export function getTranslation(translations: any, key: string): string {
     }
   }
   
-  return result;
+  return typeof result === 'string' ? result : key;
 }
 
 /**
