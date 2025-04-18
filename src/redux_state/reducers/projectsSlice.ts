@@ -1,5 +1,29 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
+import {Project, Mission} from 'typings/project';
+
+// Define the types that are not exported from typings/project
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface MissionUser {
+  missionId: string;
+  userId: string;
+}
+
+interface TaskUser {
+  taskId: string;
+  userId: string;
+}
+
+interface UserData {
+  users: User[];
+  missionUsers: MissionUser[];
+  taskUsers: TaskUser[];
+}
 
 export interface ProjectsState {
   projects: Project[];
@@ -28,7 +52,7 @@ export const projectsSlice = createSlice({
     },
     updateProjectName: (state, action: PayloadAction<{projectId: string; name: string}>) => {
       const {projectId, name} = action.payload;
-      const project = state.projects.find(proj => proj.id === projectId);
+      const project = state.projects.find((proj: Project) => proj.id.toString() === projectId);
       if (project) {
         project.name = name;
       }
@@ -43,9 +67,9 @@ export const projectsSlice = createSlice({
       }>
     ) => {
       const {projectId, missionId, name} = action.payload;
-      const project = state.projects.find(proj => proj.id === projectId);
+      const project = state.projects.find((proj: Project) => proj.id.toString() === projectId);
       if (project) {
-        const mission = project.missions.find(mis => mis.id === missionId);
+        const mission = project.missions.find((mis: Mission) => mis.id === missionId);
         if (mission) {
           mission.name = name;
         }
@@ -60,7 +84,7 @@ export const projectsSlice = createSlice({
       }>
     ) => {
       const {projectId, name} = action.payload;
-      const project = state.projects.find(proj => proj.id === projectId);
+      const project = state.projects.find((proj: Project) => proj.id.toString() === projectId);
       if (project) {
         const newMission: Mission = {
           id: Date.now().toString(),
@@ -81,9 +105,9 @@ export const projectsSlice = createSlice({
       }>
     ) => {
       const {projectId, missionId} = action.payload;
-      const project = state.projects.find(proj => proj.id === projectId);
+      const project = state.projects.find((proj: Project) => proj.id.toString() === projectId);
       if (project) {
-        project.missions = project.missions.filter(mis => mis.id !== missionId);
+        project.missions = project.missions.filter((mis: Mission) => mis.id !== missionId);
       }
     },
 
@@ -96,7 +120,7 @@ export const projectsSlice = createSlice({
       }>
     ) => {
       const {projectId, startIndex, endIndex} = action.payload;
-      const project = state.projects.find(proj => proj.id === projectId);
+      const project = state.projects.find((proj: Project) => proj.id.toString() === projectId);
       if (project) {
         const [removed] = project.missions.splice(startIndex, 1);
         project.missions.splice(endIndex, 0, removed);
@@ -113,8 +137,8 @@ export const projectsSlice = createSlice({
       }>
     ) => {
       const {sourceProjectId, destinationProjectId, startIndex, endIndex} = action.payload;
-      const sourceProject = state.projects.find(proj => proj.id === sourceProjectId);
-      const destinationProject = state.projects.find(proj => proj.id === destinationProjectId);
+      const sourceProject = state.projects.find((proj: Project) => proj.id.toString() === sourceProjectId);
+      const destinationProject = state.projects.find((proj: Project) => proj.id.toString() === destinationProjectId);
 
       if (sourceProject && destinationProject) {
         const [removed] = sourceProject.missions.splice(startIndex, 1);

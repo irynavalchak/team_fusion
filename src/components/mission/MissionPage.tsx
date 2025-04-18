@@ -17,6 +17,16 @@ import TaskCard from './components/TaskCard/TaskCard';
 import Confirmation from '../common/Confirmation/Confirmation';
 
 import styles from './MissionPage.module.css';
+import {Task as ApiTask} from 'typings/project';
+
+// Define the internal Task type with strict status values
+interface Task {
+  id: string;
+  title: string;
+  description: string;
+  status: 'todo' | 'doing' | 'review' | 'done';
+  createdAt: string;
+}
 
 interface MissionPageProps {
   projectId: string;
@@ -44,7 +54,16 @@ const MissionPage: React.FC<MissionPageProps> = ({projectId, missionId}) => {
 
   useEffect(() => {
     if (selectedMission) {
-      setTasks(selectedMission.tasks);
+      // Convert API tasks to our internal Task type with strict status
+      const convertedTasks: Task[] = selectedMission.tasks.map(apiTask => ({
+        id: apiTask.id,
+        title: apiTask.title,
+        description: apiTask.description,
+        status: apiTask.status as 'todo' | 'doing' | 'review' | 'done',
+        createdAt: apiTask.createdAt
+      }));
+
+      setTasks(convertedTasks);
     }
   }, [selectedMission]);
 

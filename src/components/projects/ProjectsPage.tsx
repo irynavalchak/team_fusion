@@ -24,6 +24,19 @@ import MissionCard from './components/MissionCard/MissionCard';
 import Confirmation from '../common/Confirmation/Confirmation';
 
 import styles from './ProjectsPage.module.css';
+import {Project, Mission} from 'typings/project';
+
+// Types for components
+interface MissionUser {
+  missionId: string;
+  userId: string;
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
 
 const ProjectsPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -47,7 +60,7 @@ const ProjectsPage: React.FC = () => {
   const {isLoadingUserData} = useLoadingUserData();
 
   const handleProjectNameDoubleClick = (project: Project) => {
-    setEditingProjectId(project.id);
+    setEditingProjectId(project.id.toString());
     setNewProjectName(project.name);
   };
 
@@ -56,8 +69,8 @@ const ProjectsPage: React.FC = () => {
   };
 
   const handleProjectNameBlur = (projectId: string) => {
-    if (newProjectName.trim() && newProjectName !== projects.find(p => p.id === projectId)?.name) {
-      dispatch(updateProjectName({projectId: projectId, name: newProjectName.trim()}));
+    if (newProjectName.trim() && newProjectName !== projects.find(p => p.id.toString() === projectId)?.name) {
+      dispatch(updateProjectName({projectId, name: newProjectName.trim()}));
     }
     setEditingProjectId(null);
     setNewProjectName('');
@@ -92,8 +105,8 @@ const ProjectsPage: React.FC = () => {
     setSelectedMissionId(missionId || null);
 
     if (missionId) {
-      const project = projects.find(proj => proj.id === projectId);
-      const mission = project?.missions.find(mis => mis.id === missionId);
+      const project = projects.find(proj => proj.id.toString() === projectId);
+      const mission = project?.missions.find((mis: Mission) => mis.id === missionId);
       if (mission) setMissionName(mission.name);
     } else {
       setMissionName('');
@@ -162,16 +175,16 @@ const ProjectsPage: React.FC = () => {
       <DragDropContext onDragEnd={onDragEnd}>
         <div className={styles.columns}>
           {projects?.map(project => (
-            <Droppable key={project.id} droppableId={project.id.toString()}>
+            <Droppable key={project.id.toString()} droppableId={project.id.toString()}>
               {provided => (
                 <Card {...provided.droppableProps} ref={provided.innerRef} className={styles.column}>
                   <CardHeader className={styles.projectHeader}>
                     <CardTitle onDoubleClick={() => handleProjectNameDoubleClick(project)}>
-                      {editingProjectId === project.id ? (
+                      {editingProjectId === project.id.toString() ? (
                         <input
                           value={newProjectName}
                           onChange={handleProjectNameChange}
-                          onBlur={() => handleProjectNameBlur(project.id)}
+                          onBlur={() => handleProjectNameBlur(project.id.toString())}
                           autoFocus
                         />
                       ) : (
@@ -180,11 +193,11 @@ const ProjectsPage: React.FC = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className={styles.missionsContainer}>
-                    {project.missions.map((mission, index) => (
+                    {project.missions.map((mission: Mission, index: number) => (
                       <MissionCard
                         key={mission.id}
                         mission={mission}
-                        projectId={project.id}
+                        projectId={project.id.toString()}
                         index={index}
                         onEdit={openMissionModal}
                         onDelete={handleDeleteMission}
@@ -197,7 +210,7 @@ const ProjectsPage: React.FC = () => {
                     {provided.placeholder}
                   </CardContent>
                   <div className={styles.addMissionButtonContainer}>
-                    <button className={styles.addMissionButton} onClick={() => openMissionModal(project.id)}>
+                    <button className={styles.addMissionButton} onClick={() => openMissionModal(project.id.toString())}>
                       <Plus size={16} /> Add Mission
                     </button>
                   </div>
