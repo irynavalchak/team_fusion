@@ -303,7 +303,7 @@ const DocumentsPage: React.FC = () => {
       isSaving={isSaving}
       onCancel={() => setIsEditing(false)}
       onContentChange={setSelectedContent}
-      title="Documents"
+      title="Document"
       isReadOnly={isReadOnly}
       isConfirmationOpen={isConfirmationOpen}
       cancelDelete={cancelDelete}
@@ -329,12 +329,7 @@ const DocumentsPage: React.FC = () => {
           </button>
         </CopyToClipboard>
       }>
-      <DocumentsBar
-        onCreateNewDocument={handleOpenNewDocumentPopup}
-        selectedDocument={selectedDocument}
-        selectedLanguage={selectedLanguage}
-        onLanguageChange={handleLanguageChange}
-      />
+      <DocumentsBar onCreateNewDocument={handleOpenNewDocumentPopup} />
       <DocumentsTree
         node={tree}
         activeItem={activeItem}

@@ -1,27 +1,36 @@
 .newButton {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  padding: 8px;
-  border: 2px solid #007bff;
-  border-radius: 4px;
-  background-color: transparent;
-  color: #007bff;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d32f2f;
+  border-radius: 6px;
+  background-color: #fdf3f3;
+  color: #d32f2f;
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
   cursor: pointer;
   transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .newButton:hover {
-  background-color: #007bff2a;
+  background-color: #fbe9e9;
+  border-color: #b71c1c;
   text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .actionWrapper {
   display: flex;
-  justify-content: flex-start;
-  margin-top: 10px;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0 5px;
+  margin-bottom: 20px;
 }

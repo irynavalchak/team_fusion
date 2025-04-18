@@ -1,4 +1,4 @@
-import {ReactNode} from 'react';
+import {ReactNode, Children} from 'react';
 import {usePathname} from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -62,6 +62,10 @@ function ManagerWrapper({
   handleDeleteDocumentContent
 }: Props) {
   const pathName = usePathname();
+
+  // Convert children to array for indexed access
+  const childrenArray = Children.toArray(children);
+
   return (
     <div className={styles.container}>
       <div className={styles.leftPanel}>
@@ -130,10 +134,20 @@ function ManagerWrapper({
       </div>
 
       {!isReadOnly && (
-        <ScrollArea className={styles.rightPanel}>
-          <div className={styles.rootTitle}>{title}</div>
-          <div className={styles.fileTree}>{children}</div>
-        </ScrollArea>
+        <div className={styles.customRightPanel}>
+          <div className={styles.rightPanelHeader}>
+            <div className={styles.rootTitle}>{title}</div>
+            <div className={styles.stickyButtonContainer}>
+              {childrenArray[0]} {/* This is the DocumentsBar component with the New Document button */}
+            </div>
+          </div>
+          <div className={styles.customScrollArea}>
+            <div className={styles.fileTree}>
+              {childrenArray[1]} {/* This is the DocumentsTree component */}
+            </div>
+            {childrenArray.slice(2)} {/* Any other components passed as children */}
+          </div>
+        </div>
       )}
 
       <Confirmation

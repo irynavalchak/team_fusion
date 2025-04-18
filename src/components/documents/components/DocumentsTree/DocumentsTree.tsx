@@ -23,20 +23,30 @@ const DocumentsTree: React.FC<DocumentsTreeProps> = ({node, path = '', activeIte
   const router = useRouter();
 
   return (
-    <>
+    <div className={styles.treeContainer}>
       {Object.entries(node).map(([key, value]) => {
         const currentPath = path ? `${path}/${key}` : key;
-        const isOpen = openPaths.includes(key); // Перевіряємо, чи має бути папка відкрита
+        const isOpen = openPaths.includes(key);
 
         if (value && typeof value === 'object' && !('id' in value)) {
+          // This is a folder
           return (
-            <Accordion type="single" collapsible key={currentPath} defaultValue={isOpen ? currentPath : undefined}>
-              <AccordionItem value={currentPath}>
+            <Accordion
+              type="single"
+              collapsible
+              key={currentPath}
+              defaultValue={isOpen ? currentPath : undefined}
+              className={styles.folderAccordion}>
+              <AccordionItem value={currentPath} className={styles.folderAccordionItem}>
                 <AccordionTrigger className={styles.folderItem}>
-                  <Folder className="h-6 w-6 mr-2" />
-                  {key}
+                  <div className={styles.folderContent}>
+                    <Folder className="h-5 w-5 shrink-0" />
+                    <span className={styles.folderName} title={key}>
+                      {key}
+                    </span>
+                  </div>
                 </AccordionTrigger>
-                <AccordionContent>
+                <AccordionContent className={styles.nestedContent}>
                   <DocumentsTree
                     node={value as TreeNode}
                     path={currentPath}
@@ -49,6 +59,7 @@ const DocumentsTree: React.FC<DocumentsTreeProps> = ({node, path = '', activeIte
             </Accordion>
           );
         } else if ('id' in value) {
+          // This is a document
           const doc = value as UserDocument;
           const isActive = activeItem === doc.id;
           return (
@@ -59,14 +70,16 @@ const DocumentsTree: React.FC<DocumentsTreeProps> = ({node, path = '', activeIte
                 onDocumentSelect(doc);
                 router.push(`/documents?id=${doc.id}`);
               }}>
-              <File className="h-4 w-4 mr-2" />
-              <span>{doc.title}</span>
+              <File className="h-4 w-4 shrink-0" />
+              <span className={styles.fileName} title={doc.title}>
+                {doc.title}
+              </span>
             </div>
           );
         }
         return null;
       })}
-    </>
+    </div>
   );
 };
 

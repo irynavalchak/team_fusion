@@ -3,8 +3,13 @@
   padding: 0;
 }
 
+.treeContainer {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .selectedFile {
-  background-color: #e3f2fd;
+  background-color: #e3f2fd !important;
   font-weight: bold;
 }
 
@@ -14,25 +19,83 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 1px solid #999;
+  border-bottom: 1px solid #eaeaea;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: background-color 0.2s ease;
 }
 
-.fileItem span {
+.fileName {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: #222;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.fileName:hover {
+  color: #000;
 }
 
 .fileItem:hover {
   background: #e3f2fd;
 }
 
+.folderAccordion {
+  width: 100%;
+  overflow: hidden;
+}
+
+.folderAccordionItem {
+  border: none !important;
+  width: 100%;
+}
+
 .folderItem {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0;
   cursor: pointer;
-  border-bottom: 1px solid #999;
+  border-bottom: 1px solid #eaeaea;
+  overflow: hidden;
+}
+
+.folderContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  padding: 10px 14px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.folderName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+  color: #222;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.folderName:hover {
+  color: #000;
+}
+
+.nestedContent {
+  border-left: 2px solid #eaeaea;
+  margin-left: 20px !important;
+  padding-left: 0 !important;
+  padding-right: 5px !important;
+  margin-top: 2px !important;
+  margin-bottom: 2px !important;
 }

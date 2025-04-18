@@ -18,14 +18,39 @@
   word-wrap: break-word;
 }
 
-.rightPanel {
+.customRightPanel {
   height: fit-content;
   border: 1px solid #d32f2f;
   border-radius: 8px;
-  padding: 20px;
+  padding: 10px;
   width: 300px;
   background: #fdf3f3;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: block;
+  box-sizing: border-box;
+}
+
+.customScrollArea {
+  height: calc(100vh - 180px);
+  overflow-y: auto;
+  box-sizing: border-box;
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.rightPanelHeader {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fdf3f3;
+  padding-bottom: 15px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.stickyButtonContainer {
+  margin-top: 10px;
 }
 
 .rootTitle {
@@ -237,6 +262,9 @@
 .fileTree {
   list-style: none;
   padding: 0;
+  overflow: visible;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .editor {
@@ -255,28 +283,30 @@
 .buttonContainer {
   display: flex;
   gap: 10px;
-  margin-top: auto;
+  margin-top: 20px;
   justify-content: flex-end;
 }
 
 .buttonEdit {
-  padding: 6px 18px;
+  padding: 8px 20px;
   background: #0070f3;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
+  margin-top: 5px;
 }
 
 .buttonDelete {
-  padding: 6px 18px;
+  padding: 8px 20px;
   background: #ef7474;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
+  margin-top: 5px;
 }
 
 .button:disabled {
@@ -291,6 +321,7 @@
   line-height: 1.6;
   color: #333;
   padding: 20px;
+  padding-top: 30px;
   max-width: 100%;
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -416,11 +447,6 @@
     padding: 10px;
   }
 
-  .rightPanel {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-
   .leftPanel {
     width: 100%;
   }
@@ -431,4 +457,10 @@
   align-items: center;
   gap: 8px;
   width: 100%;
+}
+
+.contentArea {
+  height: 100%;
+  max-height: 60vh;
+  overflow-y: auto;
 }

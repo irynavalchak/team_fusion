@@ -7,24 +7,16 @@ import {Plus} from 'lucide-react';
 
 import styles from './DocumentsBar.module.css';
 
-interface DocumentsBarProps {
+interface Props {
   onCreateNewDocument: () => void;
-  selectedDocument: UserDocument | null;
-  selectedLanguage: string;
-  onLanguageChange: (language: string) => void;
 }
 
-const DocumentsBar: React.FC<DocumentsBarProps> = ({
-  onCreateNewDocument,
-  selectedDocument,
-  selectedLanguage,
-  onLanguageChange
-}) => {
+const DocumentsBar: React.FC<Props> = ({onCreateNewDocument}) => {
   return (
     <div className={styles.actionWrapper}>
       <Button variant="link" onClick={onCreateNewDocument} className={styles.newButton}>
-        <Plus className="h-4 w-4" />
-        New
+        <Plus className="h-5 w-5 mr-2" />
+        New Document
       </Button>
     </div>
   );
