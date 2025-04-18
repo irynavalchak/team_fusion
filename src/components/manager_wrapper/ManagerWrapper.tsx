@@ -29,6 +29,7 @@ interface Props {
   images?: string[];
   basePath?: string;
   shareButton?: React.ReactNode;
+  copyContentButton?: React.ReactNode;
   isReadOnly?: boolean;
   cancelDelete?: () => void;
   onDelete?: () => void;
@@ -51,6 +52,7 @@ function ManagerWrapper({
   images,
   basePath,
   shareButton,
+  copyContentButton,
   isReadOnly,
   cancelDelete,
   onDelete,
@@ -68,7 +70,10 @@ function ManagerWrapper({
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
               <h2 className={styles.title}>{selectedItem.split('/').pop()}</h2>
-              {!isReadOnly && shareButton && <div className={styles.shareIcon}>{shareButton}</div>}
+              <div className={styles.actionButtons}>
+                {copyContentButton && <div className={styles.copyIcon}>{copyContentButton}</div>}
+                {!isReadOnly && shareButton && <div className={styles.shareIcon}>{shareButton}</div>}
+              </div>
             </div>
             <div className={`${styles.sectionContent} ${isEditing ? styles.editingContent : ''}`}>
               {images && basePath && (

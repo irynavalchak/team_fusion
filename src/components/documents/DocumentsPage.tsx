@@ -5,7 +5,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import axios from 'axios';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {toast} from 'react-toastify';
-import {Share2} from 'lucide-react';
+import {Share2, Clipboard} from 'lucide-react';
 
 import {useAppSelector, useAppDispatch} from 'redux_state/hooks';
 import {
@@ -213,6 +213,12 @@ const DocumentsPage: React.FC = () => {
     }
   };
 
+  const handleCopyContent = () => {
+    if (selectedContent) {
+      toast.success('Content copied to clipboard!');
+    }
+  };
+
   const cancelDelete = () => {
     setIsConfirmationOpen(false);
   };
@@ -269,6 +275,15 @@ const DocumentsPage: React.FC = () => {
       cancelDelete={cancelDelete}
       onDelete={confirmDelete}
       handleDeleteDocumentContent={handleDeleteDocumentContent}
+      copyContentButton={
+        <CopyToClipboard text={selectedContent || ''}>
+          <button onClick={handleCopyContent} style={{cursor: 'pointer'}}>
+            <span role="img" aria-label="copy content">
+              <Clipboard size={30} />
+            </span>
+          </button>
+        </CopyToClipboard>
+      }
       shareButton={
         <CopyToClipboard
           text={`${window.location.origin}/documents?id=${encryptId(selectedDocument?.id || 0)}&contentId=${selectedContentId && encryptId(selectedContentId)}`}>
