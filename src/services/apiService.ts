@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ProjectItem, Project, ProjectModel, Mission, MissionModel, Task, TaskModel } from '@/typings/project';
 
 export const createTransaction = async (transaction: Transaction) => {
   try {
@@ -142,24 +143,12 @@ export const getMonthlyTransactions = async (organizationId: string, startDate: 
 export const getProjects = async (): Promise<Project[]> => {
   try {
     const response = await axios.get('/api/projects');
-    const data = response.data.projects.projects;
+    const data = response.data.projects;
 
     const projects: Project[] = data.map((project: ProjectModel) => ({
       id: project.id,
-      name: project.name,
-      missions: project.missions.map((mission: MissionModel) => ({
-        id: mission.id,
-        name: mission.name,
-        status: mission.status,
-        createdAt: mission.created_at,
-        tasks: mission.tasks.map((task: TaskModel) => ({
-          id: task.id,
-          title: task.title,
-          description: task.description,
-          status: task.status,
-          createdAt: task.created_at
-        }))
-      }))
+      name: project.label_en,
+      missions: []
     }));
 
     return projects;
@@ -201,9 +190,9 @@ export const getUserData = async (): Promise<UserData | null> => {
 export const getMissionById = async (projectId: string, missionId: string): Promise<Mission | null> => {
   try {
     const response = await axios.get('/api/projects');
-    const projects: ProjectModel[] = response.data.projects.projects;
+    const projects: Project[] = response.data.projects;
 
-    const project = projects.find(p => p.id === projectId);
+    const project = projects.find(p => p.id.toString() === projectId);
     if (!project) {
       return null;
     }
@@ -213,21 +202,7 @@ export const getMissionById = async (projectId: string, missionId: string): Prom
       return null;
     }
 
-    const mission: Mission = {
-      id: missionData.id,
-      name: missionData.name,
-      status: missionData.status,
-      createdAt: missionData.created_at,
-      tasks: missionData.tasks.map((task: TaskModel) => ({
-        id: task.id,
-        title: task.title,
-        description: task.description,
-        status: task.status,
-        createdAt: task.created_at
-      }))
-    };
-
-    return mission;
+    return missionData;
   } catch (error) {
     console.error('Error getting mission:', error);
     return null;
@@ -268,6 +243,22 @@ export const getAllDocuments = async (): Promise<UserDocument[]> => {
     return mappedData;
   } catch (error) {
     console.error('Error getting documents:', error);
+    return [];
+  }
+};
+
+export interface ProjectsResponse {
+  data: {
+    projects: ProjectItem[];
+  }
+}
+
+export const fetchProjectList = async (): Promise<ProjectItem[]> => {
+  try {
+    const response = await axios.get('/api/projects');
+    return response.data.projects;
+  } catch (error) {
+    console.error('Error fetching project list:', error);
     return [];
   }
 };

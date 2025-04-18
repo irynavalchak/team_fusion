@@ -1,6 +1,10 @@
 en:
   title: "Welcome to TeamFusion"
   toggleLabel: "Show Experimental Features"
+  projectSelection:
+    label: "Select Project"
+    selectProject: "Select a project"
+    currentProject: "Current Project:"
   navigation:
     documents: "Documents"
     settings: "Settings"
@@ -25,6 +29,10 @@ en:
 ru:
   title: "Добро пожаловать в TeamFusion"
   toggleLabel: "Показать экспериментальные функции"
+  projectSelection:
+    label: "Выбрать проект"
+    selectProject: "Выберите проект"
+    currentProject: "Текущий проект:"
   navigation:
     documents: "Документы"
     settings: "Настройки"
@@ -49,6 +57,10 @@ ru:
 th:
   title: "ยินดีต้อนรับสู่ TeamFusion"
   toggleLabel: "แสดงคุณสมบัติทดลอง"
+  projectSelection:
+    label: "เลือกโครงการ"
+    selectProject: "เลือกโครงการ"
+    currentProject: "โครงการปัจจุบัน:"
   navigation:
     documents: "เอกสาร"
     settings: "การตั้งค่า"
