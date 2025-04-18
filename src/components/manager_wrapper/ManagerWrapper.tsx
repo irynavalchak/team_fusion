@@ -30,6 +30,7 @@ interface Props {
   basePath?: string;
   shareButton?: React.ReactNode;
   copyContentButton?: React.ReactNode;
+  languageSelector?: React.ReactNode;
   isReadOnly?: boolean;
   cancelDelete?: () => void;
   onDelete?: () => void;
@@ -53,6 +54,7 @@ function ManagerWrapper({
   basePath,
   shareButton,
   copyContentButton,
+  languageSelector,
   isReadOnly,
   cancelDelete,
   onDelete,
@@ -71,6 +73,7 @@ function ManagerWrapper({
             <div className={styles.sectionHeader}>
               <h2 className={styles.title}>{selectedItem.split('/').pop()}</h2>
               <div className={styles.actionButtons}>
+                {languageSelector && <div className={styles.languageSelector}>{languageSelector}</div>}
                 {copyContentButton && <div className={styles.copyIcon}>{copyContentButton}</div>}
                 {!isReadOnly && shareButton && <div className={styles.shareIcon}>{shareButton}</div>}
               </div>

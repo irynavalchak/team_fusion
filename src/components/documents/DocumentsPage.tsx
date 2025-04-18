@@ -117,9 +117,20 @@ const DocumentsPage: React.FC = () => {
   const handleLanguageChange = (language: string) => {
     setSelectedLanguage(language);
     const selectedContent = selectedDocument?.documentContents.find(c => c.languageCode === language);
+
     if (selectedContent && selectedDocument) {
       setSelectedContentId(selectedContent.id);
-      router.push(`/documents?id=${selectedDocument.id}&contentId=${selectedContent.id}`);
+
+      // Update URL with the new content ID
+      if (isReadOnly) {
+        // In public mode, just update the URL without triggering translation
+        const encryptedDocumentId = encryptId(selectedDocument.id);
+        const encryptedContentId = encryptId(selectedContent.id);
+        router.push(`/documents?id=${encryptedDocumentId}&contentId=${encryptedContentId}`);
+      } else {
+        // In private mode, update normally (which may trigger translation via useAutoTranslate)
+        router.push(`/documents?id=${selectedDocument.id}&contentId=${selectedContent.id}`);
+      }
     }
   };
 
@@ -258,6 +269,29 @@ const DocumentsPage: React.FC = () => {
     }
   };
 
+  // Create a language selector component
+  const renderLanguageSelector = () => {
+    if (!selectedDocument || selectedDocument.documentContents.length === 0) return null;
+
+    const availableLanguages = selectedDocument.documentContents.map(content => content.languageCode);
+
+    // Only show languages that have content
+    if (availableLanguages.length === 0) return null;
+
+    return (
+      <select
+        value={selectedLanguage}
+        onChange={e => handleLanguageChange(e.target.value)}
+        aria-label="Select language">
+        {availableLanguages.map(lang => (
+          <option key={lang} value={lang}>
+            {lang.toUpperCase()}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
   return (
     <ManagerWrapper
       selectedItem={selectedDocument?.title || null}
@@ -275,6 +309,7 @@ const DocumentsPage: React.FC = () => {
       cancelDelete={cancelDelete}
       onDelete={confirmDelete}
       handleDeleteDocumentContent={handleDeleteDocumentContent}
+      languageSelector={renderLanguageSelector()}
       copyContentButton={
         <CopyToClipboard text={selectedContent || ''}>
           <button onClick={handleCopyContent} style={{cursor: 'pointer'}}>

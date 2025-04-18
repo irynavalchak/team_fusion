@@ -20,57 +20,8 @@
   text-decoration: none;
 }
 
-.languageWrapper {
+.actionWrapper {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin-top: 10px;
-}
-
-.languageSelector select {
-  appearance: none;
-  background-color: #ffffff;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  padding: 6px 28px 6px 10px;
-  font-size: 14px;
-  font-family: inherit;
-  color: #333333;
-  cursor: pointer;
-  outline: none;
-  transition:
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-  width: auto;
-  max-width: 140px;
-}
-
-.languageSelector select:hover {
-  border-color: #999999;
-}
-
-.languageSelector select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
-
-.languageSelector {
-  position: relative;
-  display: inline-block;
-}
-
-.languageSelector::after {
-  content: '▼';
-  position: absolute;
-  top: 50%;
-  right: 8px;
-  transform: translateY(-50%);
-  pointer-events: none;
-  font-size: 10px;
-  color: #666666;
-}
-
-.languageSelector select option {
-  font-size: 10px;
-  color: #333333;
-  padding: 6px 10px;
 }
