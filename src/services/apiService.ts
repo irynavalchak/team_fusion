@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { ProjectItem, Project, ProjectModel, Mission, MissionModel, Task, TaskModel } from '@/typings/project';
+import {ProjectItem, Project, ProjectModel, Mission, MissionModel, Task, TaskModel} from '@/typings/project';
+import {ProjectContextBlock, ProjectContextResponse, ProjectContextBlockModel} from '@/typings/projectContext';
 
 export const createTransaction = async (transaction: Transaction) => {
   try {
@@ -250,7 +251,7 @@ export const getAllDocuments = async (): Promise<UserDocument[]> => {
 export interface ProjectsResponse {
   data: {
     projects: ProjectItem[];
-  }
+  };
 }
 
 export const fetchProjectList = async (): Promise<ProjectItem[]> => {
@@ -259,6 +260,37 @@ export const fetchProjectList = async (): Promise<ProjectItem[]> => {
     return response.data.projects;
   } catch (error) {
     console.error('Error fetching project list:', error);
+    return [];
+  }
+};
+
+export const getProjectContextBlocks = async (projectId: number): Promise<ProjectContextBlock[]> => {
+  try {
+    const response = await axios.get(`/api/project-context?project_id=${projectId}`);
+
+    const data = response.data as ProjectContextResponse;
+
+    console.log(data);
+
+    // Transform the response data to our client model
+    const projectContextBlocks: ProjectContextBlock[] =
+      data.knowledge_base_project_context_blocks?.map((item: ProjectContextBlockModel) => ({
+        id: item.id,
+        title: item.title,
+        content: item.content,
+        path: item.path,
+        projectId: item.project_id,
+        tags: item.tags,
+        createdAt: item.created_at,
+        updatedAt: item.updated_at,
+        updatedBy: item.updated_by
+      })) || [];
+
+    console.log(projectContextBlocks);
+
+    return projectContextBlocks;
+  } catch (error) {
+    console.error('Error fetching project context blocks:', error);
     return [];
   }
 };

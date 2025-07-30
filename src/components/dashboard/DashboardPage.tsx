@@ -2,7 +2,16 @@
 
 import React, {useState, useEffect, useRef} from 'react';
 import Link from 'next/link';
-import {FileText, MessageSquare, Settings, Globe, Trello, CircleDollarSign, ChevronDown} from 'lucide-react';
+import {
+  FileText,
+  MessageSquare,
+  Settings,
+  Globe,
+  Trello,
+  CircleDollarSign,
+  ChevronDown,
+  FolderOpen
+} from 'lucide-react';
 
 import styles from './dashboard.module.css';
 
@@ -19,7 +28,7 @@ import {ProjectItem, ProjectGridItem, ProjectGridItems} from 'typings/project';
 
 // Feature-flagged items that can be toggled
 const featureFlaggedItems: ProjectGridItem[] = [
-  {href: '/ai_assistant', icon: MessageSquare, label: 'featureFlags.aiAssistant'},
+  {href: '/ai-assistant', icon: MessageSquare, label: 'featureFlags.aiAssistant'},
   {href: '/finance', icon: CircleDollarSign, label: 'featureFlags.financeModule'},
   {href: '/projects', icon: Trello, label: 'featureFlags.projectManagement'},
   {href: '/land', icon: Globe, label: 'featureFlags.landModule'}
@@ -28,6 +37,7 @@ const featureFlaggedItems: ProjectGridItem[] = [
 // Regular navigation items
 const navigationItems: ProjectGridItem[] = [
   {href: '/documents', icon: FileText, label: 'navigation.documents'},
+  {href: '/project-context', icon: FolderOpen, label: 'navigation.projectContext'},
   {href: '/settings', icon: Settings, label: 'navigation.settings'}
 ];
 
@@ -35,26 +45,31 @@ const navigationItems: ProjectGridItem[] = [
 const projectGridItems: ProjectGridItems = {
   ollc: [
     {href: '/documents', icon: FileText, label: 'navigation.documents'},
+    {href: '/project-context', icon: FolderOpen, label: 'navigation.projectContext'},
     {href: '/finance', icon: CircleDollarSign, label: 'featureFlags.financeModule'},
     {href: '/settings', icon: Settings, label: 'navigation.settings'}
   ],
   ocamp: [
     {href: '/documents', icon: FileText, label: 'navigation.documents'},
+    {href: '/project-context', icon: FolderOpen, label: 'navigation.projectContext'},
     {href: '/projects', icon: Trello, label: 'featureFlags.projectManagement'},
     {href: '/land', icon: Globe, label: 'featureFlags.landModule'},
     {href: '/settings', icon: Settings, label: 'navigation.settings'}
   ],
   tf: [
     {href: '/documents', icon: FileText, label: 'navigation.documents'},
-    {href: '/ai_assistant', icon: MessageSquare, label: 'featureFlags.aiAssistant'},
+    {href: '/project-context', icon: FolderOpen, label: 'navigation.projectContext'},
+    {href: '/ai-assistant', icon: MessageSquare, label: 'featureFlags.aiAssistant'},
     {href: '/settings', icon: Settings, label: 'navigation.settings'}
   ],
   lingva: [
     {href: '/documents', icon: FileText, label: 'navigation.documents'},
+    {href: '/project-context', icon: FolderOpen, label: 'navigation.projectContext'},
     {href: '/settings', icon: Settings, label: 'navigation.settings'}
   ],
   default: [
     {href: '/documents', icon: FileText, label: 'navigation.documents'},
+    {href: '/project-context', icon: FolderOpen, label: 'navigation.projectContext'},
     {href: '/settings', icon: Settings, label: 'navigation.settings'}
   ]
 };

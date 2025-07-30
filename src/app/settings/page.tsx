@@ -1,17 +1,16 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import React, {useState, useEffect} from 'react';
+import {ArrowLeft} from 'lucide-react';
 import Link from 'next/link';
 import LanguageSwitcher from '@/components/common/LanguageSwitcher';
-import { 
-  loadTranslations, 
-  getTranslation, 
-  getLanguageCookie, 
+import {
+  loadTranslations,
+  getTranslation,
+  getLanguageCookie,
   DEFAULT_LANGUAGE,
   TranslationObject,
-  isLanguageSupported,
-  setLanguageCookie
+  isLanguageSupported
 } from '@/utils/translations';
 
 import styles from './settings.module.css';
@@ -30,37 +29,37 @@ export default function SettingsPage() {
   useEffect(() => {
     const initializeLanguage = async () => {
       setIsLoading(true);
-      
+
       // Get language from cookie
       const cookieLanguage = getLanguageCookie();
-      const finalLanguage = isLanguageSupported(cookieLanguage) 
-        ? cookieLanguage 
-        : DEFAULT_LANGUAGE;
-      
+      const finalLanguage = isLanguageSupported(cookieLanguage) ? cookieLanguage : DEFAULT_LANGUAGE;
+
       // Set current language
       setCurrentLanguage(finalLanguage);
-      
+
       // Load translations for both dashboard and settings
       const [dashboardTranslations, settingsTranslations] = await Promise.all([
         loadTranslations(finalLanguage, 'dashboard'),
         loadTranslations(finalLanguage, 'settings')
       ]);
-      
+
+      console.log(dashboardTranslations);
+
       // Merge translations
       setTranslations({
         ...dashboardTranslations,
         ...settingsTranslations
       });
-      
+
       // Load toggle state from local storage
       const savedToggleState = localStorage.getItem('showExperimentalFeatures');
       if (savedToggleState !== null) {
         setShowExperimentalFeatures(savedToggleState === 'true');
       }
-      
+
       setIsLoading(false);
     };
-    
+
     initializeLanguage();
   }, []);
 
@@ -68,22 +67,22 @@ export default function SettingsPage() {
   const handleLanguageChange = async (lang: string) => {
     setIsLoading(true);
     setCurrentLanguage(lang);
-    
+
     // Load translations for both dashboard and settings
     const [dashboardTranslations, settingsTranslations] = await Promise.all([
       loadTranslations(lang, 'dashboard'),
       loadTranslations(lang, 'settings')
     ]);
-    
+
     // Merge translations
     setTranslations({
       ...dashboardTranslations,
       ...settingsTranslations
     });
-    
+
     setIsLoading(false);
   };
-  
+
   // Save toggle state to local storage when changed
   const handleToggleChange = (newValue: boolean) => {
     setShowExperimentalFeatures(newValue);
@@ -116,7 +115,7 @@ export default function SettingsPage() {
 
       <div className={styles.settingsSection}>
         <h2 className={styles.sectionTitle}>{t('features.title')}</h2>
-        
+
         {/* Toggle for experimental features */}
         <div className={styles.toggleContainer}>
           <label htmlFor="feature-toggle" className={styles.toggleLabel}>
@@ -125,7 +124,7 @@ export default function SettingsPage() {
               id="feature-toggle"
               type="checkbox"
               checked={showExperimentalFeatures}
-              onChange={(e) => handleToggleChange(e.target.checked)}
+              onChange={e => handleToggleChange(e.target.checked)}
               className={styles.toggleInput}
             />
             <span className={styles.toggleSwitch}></span>
@@ -135,9 +134,9 @@ export default function SettingsPage() {
 
       <div className={styles.settingsSection}>
         <h2 className={styles.sectionTitle}>{t('language.title')}</h2>
-        
+
         {/* Language switcher */}
-        <LanguageSwitcher 
+        <LanguageSwitcher
           currentLanguage={currentLanguage}
           onChange={handleLanguageChange}
           translations={translations}

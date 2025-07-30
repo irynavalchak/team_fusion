@@ -1,83 +1,86 @@
 en:
-  title: "Welcome to TeamFusion"
-  toggleLabel: "Show Experimental Features"
+  title: 'Welcome to TeamFusion'
+  toggleLabel: 'Show Experimental Features'
   projectSelection:
-    label: "Select Project"
-    selectProject: "Select a project"
-    currentProject: "Current Project:"
+    label: 'Select Project'
+    selectProject: 'Select a project'
+    currentProject: 'Current Project:'
   navigation:
-    documents: "Documents"
-    settings: "Settings"
+    documents: 'Documents'
+    projectContext: 'Project Context'
+    settings: 'Settings'
   featureFlags:
-    aiAssistant: "AI Assistant"
-    financeModule: "Finance Module"
-    projectManagement: "Project Management"
-    landModule: "Land Module"
+    aiAssistant: 'AI Assistant'
+    financeModule: 'Finance Module'
+    projectManagement: 'Project Management'
+    landModule: 'Land Module'
   languageSwitcher:
-    title: "Change Language"
-    english: "English"
-    russian: "Russian"
-    thai: "Thai"
+    title: 'Change Language'
+    english: 'English'
+    russian: 'Russian'
+    thai: 'Thai'
   settings:
-    title: "Settings"
-    backToDashboard: "Back to Dashboard"
+    title: 'Settings'
+    backToDashboard: 'Back to Dashboard'
     features:
-      title: "Feature Settings"
+      title: 'Feature Settings'
     language:
-      title: "Language Settings"
+      title: 'Language Settings'
 
 ru:
-  title: "Добро пожаловать в TeamFusion"
-  toggleLabel: "Показать экспериментальные функции"
+  title: 'Добро пожаловать в TeamFusion'
+  toggleLabel: 'Показать экспериментальные функции'
   projectSelection:
-    label: "Выбрать проект"
-    selectProject: "Выберите проект"
-    currentProject: "Текущий проект:"
+    label: 'Выбрать проект'
+    selectProject: 'Выберите проект'
+    currentProject: 'Текущий проект:'
   navigation:
-    documents: "Документы"
-    settings: "Настройки"
+    documents: 'Документы'
+    projectContext: 'Контекст проекта'
+    settings: 'Настройки'
   featureFlags:
-    aiAssistant: "ИИ Ассистент"
-    financeModule: "Финансовый модуль"
-    projectManagement: "Управление проектами"
-    landModule: "Земельный модуль"
+    aiAssistant: 'ИИ Ассистент'
+    financeModule: 'Финансовый модуль'
+    projectManagement: 'Управление проектами'
+    landModule: 'Земельный модуль'
   languageSwitcher:
-    title: "Изменить язык"
-    english: "Английский"
-    russian: "Русский"
-    thai: "Тайский"
+    title: 'Изменить язык'
+    english: 'Английский'
+    russian: 'Русский'
+    thai: 'Тайский'
   settings:
-    title: "Настройки"
-    backToDashboard: "Вернуться на Панель управления"
+    title: 'Настройки'
+    backToDashboard: 'Вернуться на Панель управления'
     features:
-      title: "Настройки функций"
+      title: 'Настройки функций'
     language:
-      title: "Настройки языка"
+      title: 'Настройки языка'
 
 th:
-  title: "ยินดีต้อนรับสู่ TeamFusion"
-  toggleLabel: "แสดงคุณสมบัติทดลอง"
+  title: 'ยินดีต้อนรับสู่ TeamFusion'
+  toggleLabel: 'แสดงคุณสมบัติทดลอง'
   projectSelection:
-    label: "เลือกโครงการ"
-    selectProject: "เลือกโครงการ"
-    currentProject: "โครงการปัจจุบัน:"
+    label: 'เลือกโครงการ'
+    selectProject: 'เลือกโครงการ'
+    currentProject: 'โครงการปัจจุบัน:'
   navigation:
-    documents: "เอกสาร"
-    settings: "การตั้งค่า"
+    documents: 'เอกสาร'
+    projectContext: 'โครงการ'
+    settings: 'การตั้งค่า'
   featureFlags:
-    aiAssistant: "ผู้ช่วย AI"
-    financeModule: "โมดูลการเงิน"
-    projectManagement: "การจัดการโครงการ"
-    landModule: "โมดูลที่ดิน"
+    aiAssistant: 'ผู้ช่วย AI'
+    financeModule: 'โมดูลการเงิน'
+    projectManagement: 'การจัดการโครงการ'
+    landModule: 'โมดูลที่ดิน'
   languageSwitcher:
-    title: "เปลี่ยนภาษา"
-    english: "อังกฤษ"
-    russian: "รัสเซีย"
-    thai: "ไทย"
+    title: 'เปลี่ยนภาษา'
+    english: 'อังกฤษ'
+    russian: 'รัสเซีย'
+    thai: 'ไทย'
   settings:
-    title: "การตั้งค่า"
-    backToDashboard: "กลับไปที่แดชบอร์ด"
+    title: 'การตั้งค่า'
+    backToDashboard: 'กลับไปที่แดชบอร์ด'
     features:
-      title: "การตั้งค่าคุณสมบัติ"
+      title: 'การตั้งค่าคุณสมบัติ'
     language:
-      title: "การตั้งค่าภาษา" 
+      title: 'การตั้งค่าภาษา'
