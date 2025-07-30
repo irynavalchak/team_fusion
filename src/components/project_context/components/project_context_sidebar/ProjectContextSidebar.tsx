@@ -7,9 +7,9 @@ import {FiEdit3, FiSave, FiX} from 'react-icons/fi';
 import {Clipboard} from 'lucide-react';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {toast} from 'react-toastify';
-import {useSession} from 'next-auth/react';
 import {ProjectContextBlock} from 'typings/projectContext';
 import {updateProjectContextBlock} from 'services/apiService';
+import {useCurrentUser} from 'hooks/useCurrentUser';
 import styles from './projectContextSidebar.module.css';
 
 interface ProjectContextSidebarProps {
@@ -18,7 +18,7 @@ interface ProjectContextSidebarProps {
 }
 
 const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBlock, onBlockUpdate}) => {
-  const {data: session} = useSession();
+  const {requireAuth} = useCurrentUser();
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
@@ -61,22 +61,11 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
   const handleUpdate = async () => {
     if (!selectedBlock || !hasChanges) return;
 
-    // Check if user is authenticated and has ID
-    // Note: ID is added to session in NextAuth callback
-    if (!session?.user) {
-      toast.error('User not authenticated');
-      return;
-    }
-
-    const userWithId = session.user as typeof session.user & {id?: string};
-    if (!userWithId.id) {
-      toast.error('User ID not found');
-      return;
-    }
-
     setIsUpdating(true);
     try {
-      const updatedBlock = await updateProjectContextBlock(selectedBlock.id, editContent, parseInt(userWithId.id));
+      const userId = requireAuth(); // Will throw if not authenticated
+      const updatedBlock = await updateProjectContextBlock(selectedBlock.id, editContent, userId);
+
       if (updatedBlock) {
         // Update the block with new data
         const newBlock = {
@@ -92,7 +81,8 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
       }
     } catch (error) {
       console.error('Error updating block:', error);
-      toast.error('Failed to update context block');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update context block';
+      toast.error(errorMessage);
     } finally {
       setIsUpdating(false);
     }

@@ -1,19 +1,33 @@
 'use client';
 
-import React, {FC, useState, useMemo} from 'react';
+import React, {FC, useState, useMemo, useEffect} from 'react';
 import {toast} from 'react-toastify';
 import useLoadingProjectContext from './hooks/useLoadingProjectContext';
 import {ProjectContextBlock} from 'typings/projectContext';
 import ProjectContextSidebar from './components/project_context_sidebar';
 import ProjectContextNavigation from './components/ProjectContextNavigation';
 import NewBlockModal from './components/NewBlockModal';
+import {useCurrentUser} from 'hooks/useCurrentUser';
 
 const ProjectContextPage: FC = () => {
   const {contextBlocks, isLoading, selectedProjectId, error, refetch} = useLoadingProjectContext();
+  const {getCurrentUserId} = useCurrentUser();
   const [selectedBlock, setSelectedBlock] = useState<ProjectContextBlock | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [isCopyingContext, setIsCopyingContext] = useState(false);
+  const [newlyCreatedPath, setNewlyCreatedPath] = useState<string | null>(null);
+
+  // Auto-select newly created block when contextBlocks are updated
+  useEffect(() => {
+    if (newlyCreatedPath && contextBlocks && contextBlocks.length > 0) {
+      const createdBlock = contextBlocks.find(block => block.path === newlyCreatedPath);
+      if (createdBlock) {
+        setSelectedBlock(createdBlock);
+        setNewlyCreatedPath(null); // Clear the flag
+      }
+    }
+  }, [contextBlocks, newlyCreatedPath]);
 
   // Prepare combined context content for copying
   const combinedContext = useMemo(() => {
@@ -36,6 +50,8 @@ const ProjectContextPage: FC = () => {
 
   const handleBlockSelect = (block: ProjectContextBlock) => {
     setSelectedBlock(block);
+    // Clear the auto-select flag if user manually selects a block
+    setNewlyCreatedPath(null);
   };
 
   const handleNewBlockClick = () => {
@@ -45,15 +61,40 @@ const ProjectContextPage: FC = () => {
   const handleCreateBlock = async (title: string, path: string, content: string) => {
     setIsCreating(true);
     try {
-      // TODO: Implement API call for creating new block
-      console.log('Creating new block:', {title, path, content, projectId: selectedProjectId});
+      const response = await fetch('/api/project-context', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          project_id: selectedProjectId,
+          path,
+          content,
+          title: title || null,
+          updated_by: getCurrentUserId()
+        })
+      });
 
-      // Placeholder for now - just show success message
-      toast.success('Block creation will be implemented soon!');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create block');
+      }
+
+      await response.json(); // Consume the response
+
+      toast.success('Context block created successfully!');
       setIsModalOpen(false);
+
+      // Set the path to auto-select when data is updated
+      setNewlyCreatedPath(path);
+
+      // Refresh the context blocks to get the latest data
+      await refetch();
     } catch (error) {
       console.error('Error creating block:', error);
-      toast.error('Failed to create block');
+      toast.error(error instanceof Error ? error.message : 'Failed to create block');
+      // Clear the auto-select flag on error
+      setNewlyCreatedPath(null);
     } finally {
       setIsCreating(false);
     }
@@ -158,9 +199,13 @@ const ProjectContextPage: FC = () => {
       {/* New Block Modal */}
       <NewBlockModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setNewlyCreatedPath(null); // Clear auto-select flag on modal close
+        }}
         onCreate={handleCreateBlock}
         isCreating={isCreating}
+        existingBlocks={contextBlocks || []}
       />
     </div>
   );
