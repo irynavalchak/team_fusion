@@ -61,50 +61,71 @@ const ProjectContextNavigation: React.FC<ProjectContextNavigationProps> = ({
       <div className="border-top pt-3">
         <h6 className="mb-2 small">Blocks ({filteredBlocks.length})</h6>
 
-        {isLoading ? (
-          <div className="text-center py-3">
-            <div className="spinner-border spinner-border-sm" role="status">
-              <span className="visually-hidden">Loading...</span>
+        <div className="card border-0 shadow-sm">
+          {isLoading ? (
+            <div className="card-body text-center py-3">
+              <div className="spinner-border spinner-border-sm" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+              <p className="mt-2 text-muted small mb-0">Loading...</p>
             </div>
-            <p className="mt-2 text-muted small">Loading...</p>
-          </div>
-        ) : filteredBlocks.length === 0 ? (
-          <div className="text-center text-muted small py-3">{searchQuery ? 'No matches' : 'No blocks found'}</div>
-        ) : (
-          <div className="list-group list-group-flush">
-            {filteredBlocks.map(block => (
-              <button
-                key={block.id}
-                type="button"
-                className={`list-group-item list-group-item-action p-2 ${selectedBlock?.id === block.id ? 'active' : ''}`}
-                onClick={() => onBlockSelect(block)}>
-                <div className="w-100">
-                  <h6 className="mb-1 small">{block.title}</h6>
-                  <p className="mb-1" style={{fontSize: '0.75rem'}}>
-                    <code>{block.path}</code>
-                  </p>
-                  {block.tags.length > 0 && (
-                    <div className="mt-1">
-                      {block.tags.slice(0, 2).map((tag, index) => (
-                        <span key={index} className="badge bg-light text-dark me-1" style={{fontSize: '0.65rem'}}>
-                          {tag}
-                        </span>
-                      ))}
-                      {block.tags.length > 2 && (
-                        <span className="text-muted" style={{fontSize: '0.7rem'}}>
-                          +{block.tags.length - 2}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  <small className="text-muted d-block mt-1" style={{fontSize: '0.7rem'}}>
-                    {new Date(block.updatedAt).toLocaleDateString()}
-                  </small>
-                </div>
-              </button>
-            ))}
-          </div>
-        )}
+          ) : filteredBlocks.length === 0 ? (
+            <div className="card-body text-center text-muted small py-3">
+              {searchQuery ? 'No matches' : 'No blocks found'}
+            </div>
+          ) : (
+            <div className="list-group list-group-flush">
+              {filteredBlocks.map((block, index) => (
+                <button
+                  key={block.id}
+                  type="button"
+                  className={`list-group-item list-group-item-action p-2 border-0 ${
+                    selectedBlock?.id === block.id ? 'bg-light border-start border-primary border-3' : 'hover-bg-light'
+                  } ${index > 0 ? 'mt-2' : ''}`}
+                  style={{
+                    backgroundColor: selectedBlock?.id === block.id ? '#f8f9fa' : 'transparent',
+                    borderLeft: selectedBlock?.id === block.id ? '3px solid #0d6efd' : 'none'
+                  }}
+                  onClick={() => onBlockSelect(block)}>
+                  <div className="w-100">
+                    <h6 className={`mb-1 small ${selectedBlock?.id === block.id ? 'text-primary fw-semibold' : ''}`}>
+                      {block.title}
+                    </h6>
+                    <p className="mb-1" style={{fontSize: '0.75rem'}}>
+                      <code className={selectedBlock?.id === block.id ? 'text-primary' : 'text-muted'}>
+                        {block.path}
+                      </code>
+                    </p>
+                    {block.tags.length > 0 && (
+                      <div className="mt-1">
+                        {block.tags.slice(0, 2).map((tag, index) => (
+                          <span
+                            key={index}
+                            className={`badge me-1 ${
+                              selectedBlock?.id === block.id
+                                ? 'bg-primary bg-opacity-10 text-primary'
+                                : 'bg-light text-dark'
+                            }`}
+                            style={{fontSize: '0.65rem'}}>
+                            {tag}
+                          </span>
+                        ))}
+                        {block.tags.length > 2 && (
+                          <span className="text-muted" style={{fontSize: '0.7rem'}}>
+                            +{block.tags.length - 2}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    <small className="text-muted d-block mt-1" style={{fontSize: '0.7rem'}}>
+                      {new Date(block.updatedAt).toLocaleDateString()}
+                    </small>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

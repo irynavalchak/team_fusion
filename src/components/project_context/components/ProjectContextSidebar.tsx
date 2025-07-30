@@ -1,7 +1,10 @@
 'use client';
 
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import {ProjectContextBlock} from 'typings/projectContext';
+import styles from './ProjectContextSidebar.module.css';
 
 interface ProjectContextSidebarProps {
   selectedBlock: ProjectContextBlock | null;
@@ -47,9 +50,18 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
 
         <div className="card-body overflow-auto">
           <div className="bg-light rounded p-3" style={{minHeight: '200px'}}>
-            <pre className="mb-0" style={{whiteSpace: 'pre-wrap', fontSize: '0.95rem', lineHeight: '1.5'}}>
-              {selectedBlock.content}
-            </pre>
+            <div className={styles.markdownContent}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {selectedBlock.content
+                  // Восстанавливаем переносы строк для markdown
+                  .replace(/  ## /g, '\n\n## ') // Заголовки H2
+                  .replace(/  ### /g, '\n\n### ') // Заголовки H3
+                  .replace(/  # /g, '\n\n# ') // Заголовки H1 (если есть в середине)
+                  .replace(/  - /g, '\n- ') // Списки
+                  .replace(/  \d+\. /g, '\n$&') // Нумерованные списки
+                  .trim()}
+              </ReactMarkdown>
+            </div>
           </div>
         </div>
       </div>
