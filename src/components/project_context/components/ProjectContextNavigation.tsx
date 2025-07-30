@@ -74,37 +74,63 @@ const ProjectContextNavigation: React.FC<ProjectContextNavigationProps> = ({
               {searchQuery ? 'No matches' : 'No blocks found'}
             </div>
           ) : (
-            <div className="list-group list-group-flush">
-              {filteredBlocks.map((block, index) => (
+            <div className="d-flex flex-column gap-3">
+              {filteredBlocks.map(block => (
                 <button
                   key={block.id}
                   type="button"
-                  className={`list-group-item list-group-item-action p-2 border-0 ${
-                    selectedBlock?.id === block.id ? 'bg-light border-start border-primary border-3' : 'hover-bg-light'
-                  } ${index > 0 ? 'mt-2' : ''}`}
+                  className={`card border-0 shadow-sm p-3 text-start ${
+                    selectedBlock?.id === block.id ? 'border-primary border-2' : ''
+                  }`}
                   style={{
-                    backgroundColor: selectedBlock?.id === block.id ? '#f8f9fa' : 'transparent',
-                    borderLeft: selectedBlock?.id === block.id ? '3px solid #0d6efd' : 'none'
+                    backgroundColor: selectedBlock?.id === block.id ? '#f8f9fa' : 'white',
+                    borderLeft: selectedBlock?.id === block.id ? '4px solid #0d6efd' : 'none',
+                    transition: 'all 0.2s ease',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={e => {
+                    if (selectedBlock?.id !== block.id) {
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (selectedBlock?.id !== block.id) {
+                      e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }
                   }}
                   onClick={() => onBlockSelect(block)}>
                   <div className="w-100">
-                    <h6 className={`mb-1 small ${selectedBlock?.id === block.id ? 'text-primary fw-semibold' : ''}`}>
-                      {block.title}
-                    </h6>
-                    <p className="mb-1" style={{fontSize: '0.75rem'}}>
-                      <code className={selectedBlock?.id === block.id ? 'text-primary' : 'text-muted'}>
+                    {/* Header with title and date */}
+                    <div className="d-flex justify-content-between align-items-start mb-2">
+                      <h6
+                        className={`mb-0 flex-grow-1 me-2 ${selectedBlock?.id === block.id ? 'text-primary fw-semibold' : 'text-dark fw-medium'}`}>
+                        {block.title}
+                      </h6>
+                      <small className="text-muted text-nowrap" style={{fontSize: '0.7rem'}}>
+                        {new Date(block.updatedAt).toLocaleDateString()}
+                      </small>
+                    </div>
+
+                    {/* Path */}
+                    <p className="mb-2" style={{fontSize: '0.75rem'}}>
+                      <code
+                        className={`${selectedBlock?.id === block.id ? 'text-primary' : 'text-muted'} bg-light px-2 py-1 rounded`}>
                         {block.path}
                       </code>
                     </p>
+
+                    {/* Tags */}
                     {block.tags.length > 0 && (
-                      <div className="mt-1">
+                      <div className="mb-2">
                         {block.tags.slice(0, 2).map((tag, index) => (
                           <span
                             key={index}
                             className={`badge me-1 ${
                               selectedBlock?.id === block.id
-                                ? 'bg-primary bg-opacity-10 text-primary'
-                                : 'bg-light text-dark'
+                                ? 'bg-primary bg-opacity-15 text-primary border border-primary border-opacity-25'
+                                : 'bg-light text-dark border'
                             }`}
                             style={{fontSize: '0.65rem'}}>
                             {tag}
@@ -117,9 +143,13 @@ const ProjectContextNavigation: React.FC<ProjectContextNavigationProps> = ({
                         )}
                       </div>
                     )}
-                    <small className="text-muted d-block mt-1" style={{fontSize: '0.7rem'}}>
-                      {new Date(block.updatedAt).toLocaleDateString()}
-                    </small>
+
+                    {/* Content preview */}
+                    {block.content && (
+                      <p className="text-muted mb-0" style={{fontSize: '0.7rem', lineHeight: 1.4}}>
+                        {block.content.length > 100 ? `${block.content.substring(0, 100)}...` : block.content}
+                      </p>
+                    )}
                   </div>
                 </button>
               ))}
