@@ -3,13 +3,14 @@
 import React, {useState, useEffect} from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import {FiEdit3, FiSave, FiX} from 'react-icons/fi';
+import {FiEdit3, FiSave, FiX, FiEye} from 'react-icons/fi';
 import {Clipboard} from 'lucide-react';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {toast} from 'react-toastify';
 import {ProjectContextBlock} from 'typings/projectContext';
 import {updateProjectContextBlock} from 'services/apiService';
 import {useCurrentUser} from 'hooks/useCurrentUser';
+import DiffViewer from './DiffViewer';
 import styles from './projectContextSidebar.module.css';
 
 interface ProjectContextSidebarProps {
@@ -23,6 +24,7 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
   const [editContent, setEditContent] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  const [showDiff, setShowDiff] = useState(false);
 
   // Reset editing state when selected block changes
   useEffect(() => {
@@ -30,6 +32,7 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
       setEditContent(selectedBlock.content);
       setIsEditing(false);
       setHasChanges(false);
+      setShowDiff(false);
     }
   }, [selectedBlock]);
 
@@ -141,6 +144,18 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
             </button>
           )}
 
+          {/* Diff toggle button - only show when editing and there are changes */}
+          {isEditing && hasChanges && (
+            <button
+              type="button"
+              className={`btn btn-sm ${showDiff ? 'btn-info' : 'btn-outline-info'} ${styles.actionButton}`}
+              onClick={() => setShowDiff(!showDiff)}
+              disabled={isUpdating}
+              title={showDiff ? 'Hide differences' : 'Show differences'}>
+              <FiEye size={16} />
+            </button>
+          )}
+
           <CopyToClipboard text={selectedBlock.content || ''}>
             <button
               type="button"
@@ -165,13 +180,30 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
       {/* Content section - takes all remaining space */}
       <div className="flex-grow-1 overflow-auto p-3">
         {isEditing ? (
-          <textarea
-            className={`form-control h-100 ${styles.textareaEdit}`}
-            value={editContent}
-            onChange={e => setEditContent(e.target.value)}
-            placeholder="Enter markdown content..."
-            disabled={isUpdating}
-          />
+          <>
+            {showDiff && hasChanges ? (
+              <div className="h-100 d-flex flex-column">
+                <DiffViewer originalText={selectedBlock.content} modifiedText={editContent} />
+                <div className="mt-3 flex-grow-1">
+                  <textarea
+                    className={`form-control h-100 ${styles.textareaEdit}`}
+                    value={editContent}
+                    onChange={e => setEditContent(e.target.value)}
+                    placeholder="Enter markdown content..."
+                    disabled={isUpdating}
+                  />
+                </div>
+              </div>
+            ) : (
+              <textarea
+                className={`form-control h-100 ${styles.textareaEdit}`}
+                value={editContent}
+                onChange={e => setEditContent(e.target.value)}
+                placeholder="Enter markdown content..."
+                disabled={isUpdating}
+              />
+            )}
+          </>
         ) : (
           <div className={styles.markdownContent}>
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
