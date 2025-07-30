@@ -39,6 +39,17 @@ const ProjectContextPage: FC = () => {
     }
   };
 
+  const handleBlockUpdate = (updatedBlock: ProjectContextBlock) => {
+    // Update the selected block if it's the one being updated
+    if (selectedBlock && selectedBlock.id === updatedBlock.id) {
+      setSelectedBlock(updatedBlock);
+    }
+
+    // Optionally refresh the context blocks to get the latest data
+    // This ensures the navigation panel shows updated information
+    refetch();
+  };
+
   return (
     <div className="container-fluid h-100" style={{minHeight: '100vh'}}>
       {/* Header */}
@@ -70,7 +81,7 @@ const ProjectContextPage: FC = () => {
         <div className="row g-0 h-100">
           {/* Left Content Panel (80%) */}
           <div className="col-8" style={{height: 'calc(100vh - 100px)'}}>
-            <ProjectContextSidebar selectedBlock={selectedBlock} />
+            <ProjectContextSidebar selectedBlock={selectedBlock} onBlockUpdate={handleBlockUpdate} />
           </div>
 
           {/* Right Navigation Panel (20%) */}

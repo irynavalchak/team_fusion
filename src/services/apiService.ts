@@ -294,3 +294,20 @@ export const getProjectContextBlocks = async (projectId: number): Promise<Projec
     return [];
   }
 };
+
+export const updateProjectContextBlock = async (
+  blockId: string,
+  content: string
+): Promise<ProjectContextBlock | null> => {
+  try {
+    const response = await axios.put(`/api/project-context/${blockId}`, {
+      content
+    });
+
+    // The response should contain the updated block data
+    return response.data;
+  } catch (error) {
+    console.error('Error updating project context block:', error);
+    throw error;
+  }
+};
