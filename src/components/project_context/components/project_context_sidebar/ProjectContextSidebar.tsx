@@ -4,10 +4,12 @@ import React, {useState, useEffect} from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {FiEdit3, FiSave, FiX} from 'react-icons/fi';
+import {Clipboard} from 'lucide-react';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {toast} from 'react-toastify';
 import {ProjectContextBlock} from 'typings/projectContext';
 import {updateProjectContextBlock} from 'services/apiService';
-import styles from './ProjectContextSidebar.module.css';
+import styles from './projectContextSidebar.module.css';
 
 interface ProjectContextSidebarProps {
   selectedBlock: ProjectContextBlock | null;
@@ -81,6 +83,12 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
     }
   };
 
+  const handleCopyContent = () => {
+    if (selectedBlock?.content) {
+      toast.success('Context copied to clipboard!');
+    }
+  };
+
   if (!selectedBlock) {
     return (
       <div className="h-100 d-flex align-items-center justify-content-center">
@@ -120,23 +128,31 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
           {isEditing && hasChanges && (
             <button
               type="button"
-              className="btn btn-success btn-sm"
+              className={`btn btn-success btn-sm ${styles.actionButton}`}
               onClick={handleUpdate}
               disabled={isUpdating}
-              title={isUpdating ? 'Saving changes...' : 'Save changes'}
-              style={{width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-              <FiSave size={14} />
+              title={isUpdating ? 'Saving changes...' : 'Save changes'}>
+              <FiSave size={16} />
             </button>
           )}
 
+          <CopyToClipboard text={selectedBlock.content || ''}>
+            <button
+              type="button"
+              className={`btn btn-outline-secondary btn-sm ${styles.actionButton}`}
+              onClick={handleCopyContent}
+              title="Copy context to clipboard">
+              <Clipboard size={16} />
+            </button>
+          </CopyToClipboard>
+
           <button
             type="button"
-            className={`btn btn-sm ${isEditing ? 'btn-outline-secondary' : 'btn-outline-primary'}`}
+            className={`btn btn-sm ${isEditing ? 'btn-outline-secondary' : 'btn-outline-primary'} ${styles.actionButton}`}
             onClick={handleEditToggle}
             disabled={isUpdating}
-            title={isEditing ? 'Cancel editing' : 'Edit content'}
-            style={{width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            {isEditing ? <FiX size={14} /> : <FiEdit3 size={14} />}
+            title={isEditing ? 'Cancel editing' : 'Edit content'}>
+            {isEditing ? <FiX size={16} /> : <FiEdit3 size={16} />}
           </button>
         </div>
       </div>
@@ -145,16 +161,10 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
       <div className="flex-grow-1 overflow-auto p-3">
         {isEditing ? (
           <textarea
-            className="form-control h-100"
+            className={`form-control h-100 ${styles.textareaEdit}`}
             value={editContent}
             onChange={e => setEditContent(e.target.value)}
             placeholder="Enter markdown content..."
-            style={{
-              minHeight: '400px',
-              resize: 'none',
-              fontFamily: 'monospace',
-              fontSize: '14px'
-            }}
             disabled={isUpdating}
           />
         ) : (

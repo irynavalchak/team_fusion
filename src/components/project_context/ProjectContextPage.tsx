@@ -4,7 +4,7 @@ import React, {FC, useState} from 'react';
 import {toast} from 'react-toastify';
 import useLoadingProjectContext from './hooks/useLoadingProjectContext';
 import {ProjectContextBlock} from 'typings/projectContext';
-import ProjectContextSidebar from './components/ProjectContextSidebar';
+import ProjectContextSidebar from './components/project_context_sidebar';
 import ProjectContextNavigation from './components/ProjectContextNavigation';
 import NewBlockModal from './components/NewBlockModal';
 

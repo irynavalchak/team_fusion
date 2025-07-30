@@ -1,3 +1,19 @@
+/* Action Panel Button Styles */
+.actionButton {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.textareaEdit {
+  min-height: 400px;
+  resize: none;
+  font-family: monospace;
+  font-size: 14px;
+}
+
 /* Markdown content styles */
 .markdownContent {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
