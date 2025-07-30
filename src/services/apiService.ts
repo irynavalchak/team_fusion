@@ -297,11 +297,13 @@ export const getProjectContextBlocks = async (projectId: number): Promise<Projec
 
 export const updateProjectContextBlock = async (
   blockId: string,
-  content: string
+  content: string,
+  updatedBy: number
 ): Promise<ProjectContextBlock | null> => {
   try {
     const response = await axios.put(`/api/project-context/${blockId}`, {
-      content
+      content,
+      updated_by: updatedBy
     });
 
     // The response should contain the updated block data

@@ -20,11 +20,15 @@ export async function PUT(request: NextRequest, {params}: {params: {id: string}}
   try {
     const {id} = params;
     const body = await request.json();
-    const {content} = body;
+    const {content, updated_by} = body;
 
     // Validate required fields
     if (!content) {
       return NextResponse.json({error: 'content field is required'}, {status: 400});
+    }
+
+    if (!updated_by) {
+      return NextResponse.json({error: 'updated_by field is required'}, {status: 400});
     }
 
     if (!id) {
@@ -35,7 +39,8 @@ export async function PUT(request: NextRequest, {params}: {params: {id: string}}
     const response = await axios.put(
       `${API_BASE_URL}/api/rest/project-context-blocks/${id}`,
       {
-        content: content,
+        content,
+        updated_by,
         updated_at: new Date().toISOString()
       },
       {
