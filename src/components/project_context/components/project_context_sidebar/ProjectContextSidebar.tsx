@@ -145,7 +145,7 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
       {/* Header section */}
       <div className="d-flex justify-content-between align-items-start p-3 border-bottom">
         <div className="flex-grow-1">
-          <h4 className="mb-1">{selectedBlock.title}</h4>
+          <h4 className="mb-1">{selectedBlock.title || selectedBlock.path}</h4>
           <small className="text-muted">
             <strong>Path:</strong> <code>{selectedBlock.path}</code>
           </small>
@@ -265,7 +265,7 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
       {/* Delete Confirmation Modal */}
       <Confirmation
         isOpen={showDeleteConfirmation}
-        message={`Are you sure you want to delete the context block "${selectedBlock?.title}"? This action cannot be undone.`}
+        message={`Are you sure you want to delete the context block "${selectedBlock?.title || selectedBlock?.path}"? This action cannot be undone.`}
         onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
       />

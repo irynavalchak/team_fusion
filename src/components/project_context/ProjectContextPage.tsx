@@ -37,7 +37,7 @@ const ProjectContextPage: FC = () => {
 
     return contextBlocks
       .map(block => {
-        const header = `# ${block.title}`;
+        const header = `# ${block.title || block.path}`;
         const pathInfo = block.path ? `**Path:** ${block.path}` : '';
         const tagsInfo = block.tags && block.tags.length > 0 ? `**Tags:** ${block.tags.join(', ')}` : '';
         const metadata = [pathInfo, tagsInfo].filter(Boolean).join('\n');

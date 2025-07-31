@@ -17,7 +17,7 @@ export interface ProjectContextResponse {
 
 export interface ProjectContextBlock {
   id: string;
-  title: string;
+  title: string | null;
   content: string;
   path: string;
   projectId: number;

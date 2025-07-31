@@ -31,7 +31,7 @@ const ProjectContextNavigation: React.FC<ProjectContextNavigationProps> = ({
 
     const query = searchQuery.toLowerCase();
     return contextBlocks.filter(
-      block => block.title.toLowerCase().includes(query) || block.path.toLowerCase().includes(query)
+      block => block.title?.toLowerCase().includes(query) || false || block.path.toLowerCase().includes(query)
     );
   }, [contextBlocks, searchQuery]);
 
@@ -106,7 +106,7 @@ const ProjectContextNavigation: React.FC<ProjectContextNavigationProps> = ({
                     <div className="d-flex justify-content-between align-items-start mb-2">
                       <h6
                         className={`mb-0 flex-grow-1 me-2 ${selectedBlock?.id === block.id ? 'text-primary fw-semibold' : 'text-dark fw-medium'}`}>
-                        {block.title}
+                        {block.title || block.path}
                       </h6>
                       <small className="text-muted text-nowrap" style={{fontSize: '0.7rem'}}>
                         {new Date(block.updatedAt).toLocaleDateString()}
