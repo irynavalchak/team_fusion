@@ -313,3 +313,12 @@ export const updateProjectContextBlock = async (
     throw error;
   }
 };
+
+export const deleteProjectContextBlock = async (blockId: string): Promise<void> => {
+  try {
+    await axios.delete(`/api/project-context/${blockId}`);
+  } catch (error) {
+    console.error('Error deleting project context block:', error);
+    throw error;
+  }
+};

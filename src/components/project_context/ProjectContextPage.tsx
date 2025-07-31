@@ -111,6 +111,17 @@ const ProjectContextPage: FC = () => {
     refetch();
   };
 
+  const handleBlockDelete = (deletedBlockId: string) => {
+    // Clear the selected block if it's the one being deleted
+    if (selectedBlock && selectedBlock.id === deletedBlockId) {
+      setSelectedBlock(null);
+    }
+
+    // Refresh the context blocks to get the latest data
+    // This ensures the deleted block is removed from the navigation panel
+    refetch();
+  };
+
   const handleCopyProjectContext = async () => {
     if (!combinedContext.trim()) {
       toast.warning('No context available to copy');
@@ -180,7 +191,11 @@ const ProjectContextPage: FC = () => {
         <div className="row g-0 h-100">
           {/* Left Content Panel (80%) */}
           <div className="col-8" style={{height: 'calc(100vh - 100px)'}}>
-            <ProjectContextSidebar selectedBlock={selectedBlock} onBlockUpdate={handleBlockUpdate} />
+            <ProjectContextSidebar
+              selectedBlock={selectedBlock}
+              onBlockUpdate={handleBlockUpdate}
+              onBlockDelete={handleBlockDelete}
+            />
           </div>
 
           {/* Right Navigation Panel (20%) */}

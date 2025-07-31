@@ -85,3 +85,55 @@ export async function PUT(request: NextRequest, {params}: {params: {id: string}}
     );
   }
 }
+
+export async function DELETE(request: NextRequest, {params}: {params: {id: string}}) {
+  try {
+    const {id} = params;
+
+    // Validate required fields
+    if (!id) {
+      return NextResponse.json({error: 'id parameter is required'}, {status: 400});
+    }
+
+    // Make DELETE request to Hasura REST API
+    const response = await axios.delete(`${API_BASE_URL}/api/rest/project-context-blocks/${id}`, {
+      headers: {
+        'x-hasura-admin-secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    return NextResponse.json(response.data, {status: 200});
+  } catch (err) {
+    let errorMessage = 'An unknown error occurred';
+    let statusCode = 500;
+
+    // Type guard for HasuraError
+    const isHasuraError = (error: unknown): error is HasuraError => {
+      return typeof error === 'object' && error !== null && 'response' in error;
+    };
+
+    if (isHasuraError(err) && err.response?.data) {
+      const hasuraError = err.response.data;
+      errorMessage = hasuraError.errors?.[0]?.message || hasuraError.error || hasuraError.message || errorMessage;
+
+      statusCode = err.response.status || statusCode;
+
+      console.error('Hasura error details:', {
+        message: errorMessage,
+        code: hasuraError.code,
+        extensions: hasuraError.extensions
+      });
+    } else if (err instanceof Error) {
+      errorMessage = err.message;
+    }
+
+    return NextResponse.json(
+      {
+        error: errorMessage,
+        details: isHasuraError(err) ? err.response?.data : null
+      },
+      {status: statusCode}
+    );
+  }
+}

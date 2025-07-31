@@ -3,28 +3,32 @@
 import React, {useState, useEffect} from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import {FiEdit3, FiSave, FiX, FiEye} from 'react-icons/fi';
+import {FiEdit3, FiSave, FiX, FiEye, FiTrash2} from 'react-icons/fi';
 import {Clipboard} from 'lucide-react';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {toast} from 'react-toastify';
 import {ProjectContextBlock} from 'typings/projectContext';
-import {updateProjectContextBlock} from 'services/apiService';
+import {updateProjectContextBlock, deleteProjectContextBlock} from 'services/apiService';
 import {useCurrentUser} from 'hooks/useCurrentUser';
 import DiffViewer from './DiffViewer';
+import Confirmation from 'components/common/Confirmation/Confirmation';
 import styles from './projectContextSidebar.module.css';
 
 interface ProjectContextSidebarProps {
   selectedBlock: ProjectContextBlock | null;
   onBlockUpdate?: (updatedBlock: ProjectContextBlock) => void;
+  onBlockDelete?: (deletedBlockId: string) => void;
 }
 
-const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBlock, onBlockUpdate}) => {
+const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBlock, onBlockUpdate, onBlockDelete}) => {
   const {requireAuth} = useCurrentUser();
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [showDiff, setShowDiff] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Reset editing state when selected block changes
   useEffect(() => {
@@ -95,6 +99,35 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
     if (selectedBlock?.content) {
       toast.success('Context copied to clipboard!');
     }
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedBlock) return;
+
+    setIsDeleting(true);
+    try {
+      await deleteProjectContextBlock(selectedBlock.id);
+
+      // Notify parent about the deletion
+      onBlockDelete?.(selectedBlock.id);
+
+      toast.success('Context block deleted successfully!');
+      setShowDeleteConfirmation(false);
+    } catch (error) {
+      console.error('Error deleting block:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete context block';
+      toast.error(errorMessage);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteConfirmation(false);
   };
 
   if (!selectedBlock) {
@@ -168,9 +201,18 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
 
           <button
             type="button"
+            className={`btn btn-outline-danger btn-sm ${styles.actionButton}`}
+            onClick={handleDeleteClick}
+            disabled={isUpdating || isDeleting}
+            title="Delete context block">
+            <FiTrash2 size={16} />
+          </button>
+
+          <button
+            type="button"
             className={`btn btn-sm ${isEditing ? 'btn-outline-secondary' : 'btn-outline-primary'} ${styles.actionButton}`}
             onClick={handleEditToggle}
-            disabled={isUpdating}
+            disabled={isUpdating || isDeleting}
             title={isEditing ? 'Cancel editing' : 'Edit content'}>
             {isEditing ? <FiX size={16} /> : <FiEdit3 size={16} />}
           </button>
@@ -219,6 +261,14 @@ const ProjectContextSidebar: React.FC<ProjectContextSidebarProps> = ({selectedBl
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Confirmation
+        isOpen={showDeleteConfirmation}
+        message={`Are you sure you want to delete the context block "${selectedBlock?.title}"? This action cannot be undone.`}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+      />
     </div>
   );
 };
