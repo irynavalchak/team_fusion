@@ -1,8 +1,9 @@
 'use client';
 
-import React, {FC, useState, useMemo, useEffect} from 'react';
+import React, {FC, useState, useEffect} from 'react';
 import {toast} from 'react-toastify';
 import useLoadingProjectContext from './hooks/useLoadingProjectContext';
+import useCombinedContext from './hooks/useCombinedContext';
 import {ProjectContextBlock} from 'typings/projectContext';
 import ProjectContextSidebar from './components/project_context_sidebar';
 import ProjectContextNavigation from './components/ProjectContextNavigation';
@@ -29,24 +30,8 @@ const ProjectContextPage: FC = () => {
     }
   }, [contextBlocks, newlyCreatedPath]);
 
-  // Prepare combined context content for copying
-  const combinedContext = useMemo(() => {
-    if (!contextBlocks || contextBlocks.length === 0) {
-      return '';
-    }
-
-    return contextBlocks
-      .map(block => {
-        const header = `# ${block.title || block.path}`;
-        const pathInfo = block.path ? `**Path:** ${block.path}` : '';
-        const tagsInfo = block.tags && block.tags.length > 0 ? `**Tags:** ${block.tags.join(', ')}` : '';
-        const metadata = [pathInfo, tagsInfo].filter(Boolean).join('\n');
-        const content = block.content || '';
-
-        return [header, metadata, '', content].filter(Boolean).join('\n');
-      })
-      .join('\n\n---\n\n');
-  }, [contextBlocks]);
+  // Use combined context hook (excluding prompts for general context)
+  const {combinedContext} = useCombinedContext(contextBlocks, {includePrompts: false});
 
   const handleBlockSelect = (block: ProjectContextBlock) => {
     setSelectedBlock(block);
@@ -195,6 +180,7 @@ const ProjectContextPage: FC = () => {
               selectedBlock={selectedBlock}
               onBlockUpdate={handleBlockUpdate}
               onBlockDelete={handleBlockDelete}
+              contextBlocks={contextBlocks}
             />
           </div>
 

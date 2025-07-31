@@ -25,4 +25,5 @@ export interface ProjectContextBlock {
   createdAt: string;
   updatedAt: string;
   updatedBy: number;
+  isPrompt: boolean;
 }

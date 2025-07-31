@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {ProjectItem, Project, ProjectModel, Mission, MissionModel, Task, TaskModel} from '@/typings/project';
 import {ProjectContextBlock, ProjectContextResponse, ProjectContextBlockModel} from '@/typings/projectContext';
+import PROJECT_CONTEXT_BLOCK_TYPE from '@/constants/projectContext';
 
 export const createTransaction = async (transaction: Transaction) => {
   try {
@@ -283,7 +284,8 @@ export const getProjectContextBlocks = async (projectId: number): Promise<Projec
         tags: item.tags,
         createdAt: item.created_at,
         updatedAt: item.updated_at,
-        updatedBy: item.updated_by
+        updatedBy: item.updated_by,
+        isPrompt: item.path.startsWith(`${PROJECT_CONTEXT_BLOCK_TYPE.PROMPT}/`)
       })) || [];
 
     console.log(projectContextBlocks);
