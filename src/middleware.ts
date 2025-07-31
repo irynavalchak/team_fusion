@@ -92,7 +92,7 @@ export default async function middleware(request: NextRequestWithAuth, event: Ne
 
   // Для всех остальных путей используем стандартную проверку авторизации
   return withAuth(
-    function onSuccess(req) {
+    function onSuccess() {
       return NextResponse.next();
     },
     {

@@ -17,7 +17,6 @@ import TaskCard from './components/TaskCard/TaskCard';
 import Confirmation from '../common/Confirmation/Confirmation';
 
 import styles from './MissionPage.module.css';
-import {Task as ApiTask} from 'typings/project';
 
 // Define the internal Task type with strict status values
 interface Task {

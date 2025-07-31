@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 import {useAppDispatch} from 'redux_state/hooks';
 import {setSelectedMission} from 'redux_state/reducers/projectsSlice';
 import {getMissionById} from 'services/apiService';
-import {Mission as ApiMission} from 'typings/project';
 
 type MissionStatus = 'todo' | 'doing' | 'review' | 'done';
 interface ReduxMission {

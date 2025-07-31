@@ -4,6 +4,39 @@ import axios from 'axios';
 
 import ROLE from 'constants/role';
 
+// Интерфейсы для callback'ов
+interface CallbackUser {
+  id: string;
+  email?: string | null;
+  name?: string | null;
+  image?: string | null;
+}
+
+interface CallbackAccount {
+  providerAccountId: string;
+  provider: string;
+  type: string;
+}
+
+interface CallbackSession {
+  user: {
+    id?: string;
+    email?: string | null;
+    name?: string | null;
+    image?: string | null;
+    roles?: string[];
+    username?: string;
+    discord_id?: string;
+  };
+  expires: string;
+}
+
+interface CallbackJWT {
+  sub?: string;
+  discord_id?: string;
+  [key: string]: any;
+}
+
 interface UserRole {
   role: {
     role_name: string;
@@ -12,7 +45,7 @@ interface UserRole {
 
 const API_BASE_URL = process.env.API_BASE_URL || '';
 
-const handler = NextAuth({
+const nextAuthOptions = {
   providers: [
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID as string,
@@ -35,7 +68,7 @@ const handler = NextAuth({
   },
 
   callbacks: {
-    async signIn({user, account}) {
+    async signIn({user, account}: {user: CallbackUser; account: CallbackAccount | null}) {
       try {
         if (!account?.providerAccountId) {
           console.error('No provider account ID');
@@ -100,7 +133,7 @@ const handler = NextAuth({
       }
     },
 
-    async session({session, token}) {
+    async session({session, token}: {session: CallbackSession; token: CallbackJWT}) {
       try {
         const response = await axios.post(
           `${API_BASE_URL}/api/rest/get_user_by_discord_id`,
@@ -145,7 +178,7 @@ const handler = NextAuth({
       }
     },
 
-    async jwt({token, account}) {
+    async jwt({token, account}: {token: CallbackJWT; account: CallbackAccount | null}) {
       if (account) {
         token.discord_id = account.providerAccountId;
       }
@@ -153,7 +186,7 @@ const handler = NextAuth({
     },
 
     // Автоматическое перенаправление после входа
-    async redirect({url, baseUrl}) {
+    async redirect({url, baseUrl}: {url: string; baseUrl: string}) {
       // Пытаемся использовать предоставленный URL, если он безопасен
       if (url.startsWith(baseUrl)) return url;
 
@@ -161,6 +194,8 @@ const handler = NextAuth({
       return baseUrl;
     }
   }
-});
+};
+
+const handler = (NextAuth as any)(nextAuthOptions);
 
 export {handler as GET, handler as POST};
