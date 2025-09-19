@@ -9,6 +9,7 @@ en:
     documents: 'Documents'
     projectContext: 'Project Context'
     settings: 'Settings'
+    profile: 'Profile'
   featureFlags:
     aiAssistant: 'AI Assistant'
     financeModule: 'Finance Module'
@@ -38,6 +39,7 @@ ru:
     documents: 'Документы'
     projectContext: 'Контекст проекта'
     settings: 'Настройки'
+    profile: 'Профиль'
   featureFlags:
     aiAssistant: 'ИИ Ассистент'
     financeModule: 'Финансовый модуль'
@@ -67,6 +69,7 @@ th:
     documents: 'เอกสาร'
     projectContext: 'โครงการ'
     settings: 'การตั้งค่า'
+    profile: 'โปรไฟล์'
   featureFlags:
     aiAssistant: 'ผู้ช่วย AI'
     financeModule: 'โมดูลการเงิน'

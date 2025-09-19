@@ -60,7 +60,9 @@ const projectGridItems: ProjectGridItems = {
     {href: '/documents', icon: FileText, label: 'navigation.documents'},
     {href: '/project-context', icon: FolderOpen, label: 'navigation.projectContext'},
     {href: '/ai-assistant', icon: MessageSquare, label: 'featureFlags.aiAssistant'},
-    {href: '/settings', icon: Settings, label: 'navigation.settings'}
+    {href: '/settings', icon: Settings, label: 'navigation.settings'},
+    {href: '/profile', icon: MessageSquare, label: 'navigation.profile'}
+
   ],
   lingva: [
     {href: '/documents', icon: FileText, label: 'navigation.documents'},
